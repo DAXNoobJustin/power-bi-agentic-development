@@ -56,6 +56,13 @@ claude plugin install tabular-editor@power-bi-agentic-development
 - [TabularEditor/BestPracticeRules](https://github.com/TabularEditor/BestPracticeRules) - Standard BPA rule collections
 
 
+## Use or re-use of these skills
+
+These skills are intended for free community use.
+
+You do not have the license to copy and incorporate them into your own products, trainings, courses, or tools. If you copy these skills - manually or by using an agent to rewrite them - you must include attribution and a link to this original project.
+
+
 <br>
 
 ---
