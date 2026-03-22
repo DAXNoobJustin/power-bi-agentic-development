@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.5.0-blue" alt="Version">
+  <img src="https://img.shields.io/badge/version-0.6.0-blue" alt="Version">
   <img src="https://img.shields.io/badge/tabular_editor-2%20%7C%203-orange" alt="Tabular Editor">
   <img src="https://img.shields.io/badge/license-GPL--3.0-green" alt="License">
 </p>
@@ -39,27 +39,27 @@ claude plugin install fabric-cli-plugin@fabric-cli-plugin
 
 | Skill | Plugin | Description |
 |-------|--------|-------------|
-| [`bpa-rules`](skills/bpa-rules/) | tabular-editor | Create and improve Best Practice Analyzer rules |
-| [`c-sharp-scripting`](skills/c-sharp-scripting/) | tabular-editor | C# scripting for Tabular Editor (TOM API, LINQ, WinForms) |
-| [`c-sharp-macros`](skills/c-sharp-macros/) | tabular-editor | Tabular Editor macro development |
-| [`tabular-editor-cli`](skills/tabular-editor-cli/) | tabular-editor | Tabular Editor CLI usage and automation |
-| [`tabular-editor-config`](skills/tabular-editor-config/) | tabular-editor | TE3 config files (TMUO, preferences, BPA settings) |
-| [`tabular-editor-docs`](skills/tabular-editor-docs/) | tabular-editor | Local search of Tabular Editor documentation |
-| [`connect-pbid`](skills/connect-pbid/) | pbi-desktop | Connect to PBI Desktop's local AS instance via TOM and ADOMD.NET |
-| [`tmdl`](skills/tmdl/) | pbip | Author and edit TMDL files directly in PBIP projects |
-| [`pbip`](skills/pbip/) | pbip | Power BI Project (PBIP) format, structure, and file types |
+| [`bpa-rules`](plugins/tabular-editor/skills/bpa-rules/) | tabular-editor | Create and improve Best Practice Analyzer rules |
+| [`c-sharp-scripting`](plugins/tabular-editor/skills/c-sharp-scripting/) | tabular-editor | C# scripting for Tabular Editor (TOM API, LINQ, WinForms) |
+| [`c-sharp-macros`](plugins/tabular-editor/skills/c-sharp-macros/) | tabular-editor | Tabular Editor macro development |
+| [`tabular-editor-cli`](plugins/tabular-editor/skills/tabular-editor-cli/) | tabular-editor | Tabular Editor CLI usage and automation |
+| [`tabular-editor-config`](plugins/tabular-editor/skills/tabular-editor-config/) | tabular-editor | TE3 config files (TMUO, preferences, BPA settings) |
+| [`tabular-editor-docs`](plugins/tabular-editor/skills/tabular-editor-docs/) | tabular-editor | Local search of Tabular Editor documentation |
+| [`connect-pbid`](plugins/pbi-desktop/skills/connect-pbid/) | pbi-desktop | Connect to PBI Desktop's local AS instance via TOM and ADOMD.NET |
+| [`tmdl`](plugins/pbip/skills/tmdl/) | pbip | Author and edit TMDL files directly in PBIP projects |
+| [`pbip`](plugins/pbip/skills/pbip/) | pbip | Power BI Project (PBIP) format, structure, and file types |
 
 ### Commands
 
 | Command | Plugin | Description |
 |---------|--------|-------------|
-| [`/suggest-rule`](commands/suggest-rule.md) | tabular-editor | Generate BPA rules from descriptions |
+| [`/suggest-rule`](plugins/tabular-editor/commands/suggest-rule.md) | tabular-editor | Generate BPA rules from descriptions |
 
 ### Agents
 
 | Agent | Plugin | Description |
 |-------|--------|-------------|
-| [`bpa-expression-helper`](agents/bpa-expression-helper.md) | tabular-editor | Debug and improve BPA rule expressions |
+| [`bpa-expression-helper`](plugins/tabular-editor/agents/bpa-expression-helper.md) | tabular-editor | Debug and improve BPA rule expressions |
 
 
 ## Related Projects

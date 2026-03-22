@@ -4,24 +4,24 @@
     "name": "Kurt Buhler"
   },
   "metadata": {
-    "description": "Skills and tools for agentic Power BI development including Best Practice Analyzer rules, C# scripting, and Tabular Editor integration.",
-    "version": "0.5.0"
+    "description": "A marketplace for skills and tools for agentic Power BI development.",
+    "version": "0.6.0"
   },
   "plugins": [
     {
       "name": "tabular-editor",
       "description": "Agentic development tools for Power BI semantic models with Tabular Editor.",
-      "source": "./"
+      "source": "./plugins/tabular-editor"
     },
     {
       "name": "pbi-desktop",
       "description": "Connect to Power BI Desktop's local Analysis Services instance to enumerate models, query with DAX, refresh data, and modify metadata via TOM. No MCP server required.",
-      "source": "./"
+      "source": "./plugins/pbi-desktop"
     },
     {
       "name": "pbip",
-      "description": "Skills for working with Power BI Project (PBIP) files including TMDL authoring, cascading renames, project forking, and report visual JSON patterns.",
-      "source": "./"
+      "description": "Skills for working with Power BI Project (PBIP) files including TMDL authoring and project operations.",
+      "source": "./plugins/pbip"
     }
   ]
 }
