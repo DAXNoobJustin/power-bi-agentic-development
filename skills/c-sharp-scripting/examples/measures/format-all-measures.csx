@@ -1,23 +1,11 @@
-// Format DAX in all measures across the model
+// Format DAX for all measures in the model
+// Uses Tabular Editor's built-in DAX formatter
 
-var count = 0;
-var errors = new System.Collections.Generic.List<string>();
+int count = 0;
 
-foreach(var m in Model.AllMeasures) {
-    try {
-        m.FormatDax();
-        count++;
-    }
-    catch(Exception ex) {
-        errors.Add(m.DaxObjectFullName + ": " + ex.Message);
-    }
+foreach(var measure in Model.AllMeasures) {
+    measure.FormatDax();
+    count++;
 }
 
 Info("Formatted " + count + " measures");
-
-if(errors.Count > 0) {
-    Warning("Errors in " + errors.Count + " measures:");
-    foreach(var err in errors) {
-        Warning("  " + err);
-    }
-}

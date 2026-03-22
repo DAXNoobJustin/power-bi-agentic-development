@@ -1,105 +1,79 @@
-# Sample Scripts
+# Tabular Editor Script Samples
 
-Reference examples for C# scripting with Tabular Editor. These are **patterns** to learn from - write custom scripts tailored to each specific use case.
-
-
-## Organization
-
-| Directory | Purpose |
-|-----------|---------|
-| `measures/` | Measure CRUD, formatting, time intelligence, organization |
-| `columns/` | Column properties, sorting, hiding, formatting |
-| `calculation-groups/` | Time intelligence, currency conversion calc groups |
-| `relationships/` | Relationship creation and management |
-| `roles/` | Security roles, RLS, OLS configuration |
-| `bulk-operations/` | Multi-object operations, model initialization |
-| `display-folders/` | Organize objects into folders |
-| `format-strings/` | Currency, percentage, date format application |
-| `ui-dialogs/` | WinForms user interface patterns for interactive scripts |
-
-
-## New Examples
-
-### Interactive UI Scripts (`ui-dialogs/`)
-
-- **`find-replace-dialog.csx`** - WinForms dialog for find/replace in measure expressions
-- **`format-string-picker.csx`** - Dropdown dialog for applying format strings to selected measures
-
-### Selected Object Patterns (`measures/`)
-
-- **`selected-measures-to-folder.csx`** - Move selected measures to a chosen display folder
-
+Non-interactive C# scripts for automating Power BI semantic model operations.
 
 ## Usage
 
-### Tabular Editor CLI
+All scripts in this directory are **non-interactive** and can be run from the CLI without user input.
 
-**Windows (PowerShell):**
-```powershell
-TabularEditor.exe "WorkspaceName/ModelName" -S "examples/measures/add-measure.csx"
-```
+### From Claude Code Plugin
 
-**macOS/Linux:**
 ```bash
-TabularEditor "WorkspaceName/ModelName" -S "examples/measures/add-measure.csx"
+te "workspace/model" samples/measures/create_sum_measures.csx --file
 ```
 
-### Tabular Editor IDE
+### From Command Line
 
-1. Open model in Tabular Editor 2/3
-2. Go to File > New C# Script (or use script pane)
-3. Copy/paste script content
-4. Press F5 or click Run
-
-
-## Key Patterns Demonstrated
-
-### WinForms UI
-
-```csharp
-#r "System.Drawing"
-using System.Drawing;
-using System.Windows.Forms;
-ScriptHelper.WaitFormVisible = false;
-
-using(var form = new Form()) {
-    // ... build UI
-    if(form.ShowDialog() == DialogResult.OK) {
-        // ... process result
-    }
-}
+```bash
+python scripts/te_helper.py "workspace/model" samples/columns/hide_key_columns.csx --file
 ```
 
-### Selected Object Operations
+## Script Categories
 
-```csharp
-// Work with selected objects (IDE only)
-if(!Selected.Measures.Any()) {
-    Error("Select measures first");
-    return;
-}
+### Measures (`measures/`)
 
-foreach(var m in Selected.Measures) {
-    m.DisplayFolder = "New Folder";
-}
-```
+- **create_sum_measures.csx** - Create SUM measures from selected columns
+- **create_countrows_measures.csx** - Create COUNTROWS measures from selected tables
+- **create_time_intelligence.csx** - Create YTD, MTD, QTD, PY, YoY, YoY% measures
 
-### LINQ Filtering
+### Columns (`columns/`)
 
-```csharp
-// Filter and transform collections
-Model.AllMeasures
-    .Where(m => m.Name.Contains("Revenue"))
-    .ForEach(m => m.FormatString = "$#,0");
-```
+- **hide_key_columns.csx** - Hide all Key/ID columns and disable summarization
+- **disable_summarization.csx** - Disable automatic summarization on all columns
 
+### Display Folders (`display-folders/`)
 
-## Important Notes
+- **clear_all_display_folders.csx** - Remove all display folders from the model
+- **organize_measures_by_type.csx** - Organize measures into folders by naming pattern
 
-These samples demonstrate syntax and patterns. Always:
+### Format Strings (`format-strings/`)
 
-1. Review and adapt to your model structure
-2. Test on non-production models first
-3. Add appropriate error handling
-4. Include Info() statements for debugging
-5. Use `Selected` patterns only in Tabular Editor IDE (not CLI)
+- **apply_format_by_name.csx** - Apply format strings based on measure naming patterns
+
+### Bulk Operations (`bulk-operations/`)
+
+- **add_expression_to_descriptions.csx** - Add DAX expressions to measure descriptions
+- **clean_object_names.csx** - Convert CamelCase names to Proper Case Names
+
+## Script Headers
+
+All scripts include:
+- **Title** - Brief description
+- **Author** - Original author/source
+- **Description** - What the script does
+- **Usage** - How to run it
+- **Non-interactive** - Whether it requires user input
+
+## Customization
+
+Most scripts can be customized by editing variables at the top:
+- Date column names for time intelligence
+- Naming patterns for organization
+- Format string templates
+- Prefixes/suffixes to ignore
+
+## Sources
+
+Scripts are sourced from:
+- [Tabular Editor Official Docs](https://docs.tabulareditor.com)
+- [PowerBI-tips Repository](https://github.com/PowerBI-tips/TabularEditor-Scripts)
+- [Tabular Editor Scripts Repository](https://github.com/TabularEditor/Scripts)
+- Community contributions
+
+## Contributing
+
+To add new scripts:
+1. Follow the header format shown in existing scripts
+2. Ensure scripts are non-interactive (no Input(), SelectObject())
+3. Test scripts before committing
+4. Document any configuration variables
