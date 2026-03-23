@@ -862,8 +862,8 @@ fab import "Workspace.Workspace/Report.Report" -i ./Report.Report -f
 ## Common Mistakes
 
 1. **Forgetting `"Schema": "extension"`** in SourceRef for extension measures
-   - ❌ `"SourceRef": {"Entity": "Orders"}`
-   - ✅ `"SourceRef": {"Schema": "extension", "Entity": "Orders"}`
+   - WRONG: `"SourceRef": {"Entity": "Orders"}`
+   - RIGHT: `"SourceRef": {"Schema": "extension", "Entity": "Orders"}`
 
 2. **Missing `matchingOption: 1`** for per-data-point evaluation
    - Without it, formatting applies globally

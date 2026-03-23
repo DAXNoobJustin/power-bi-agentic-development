@@ -82,19 +82,26 @@ Six patterns for referencing fields in queries and expressions:
 | card | Values |
 | cardVisual (new card) | Data |
 | tableEx | Values |
-| slicer | Values |
-| advancedSlicerVisual | Values |
-| pieChart | Category, Y |
-| lineChart | Category, Y (also Y2 for combo) |
-| areaChart / stackedAreaChart | Category, Y |
-| clusteredBarChart | Category, Y |
-| clusteredColumnChart | Category, Y |
 | pivotTable | Rows, Columns, Values |
-| kpi | Indicator, Goal, Goals, TrendLine |
+| slicer | Values |
+| advancedSlicerVisual / listSlicer | Values |
+| pieChart / donutChart | Category, Y |
+| lineChart | Category, Y (also Y2 for combo) |
+| areaChart / stackedAreaChart / hundredPercentStackedAreaChart | Category, Y (also Series) |
+| barChart / clusteredBarChart / hundredPercentStackedBarChart | Category, Y |
+| columnChart / clusteredColumnChart / hundredPercentStackedColumnChart | Category, Y |
+| lineClusteredColumnComboChart | Category, Y (columns), Y2 (line) |
+| lineStackedColumnComboChart | Category, Y (stacked columns), Y2 (line) |
+| ribbonChart | Category, Y |
+| waterfallChart | Category, Y |
 | scatterChart | Category, X, Y, Size, Tooltips |
+| gauge | Y, TargetValue |
+| kpi | Indicator, Goal, Goals, TrendLine |
 | textbox | (none -- uses objects.general.paragraphs) |
-| shape / actionButton | (none -- uses objects for shape/icon config) |
-| scriptVisual | Values |
+| shape / actionButton / image | (none -- uses objects for shape/icon/image config) |
+| scriptVisual / pythonVisual | Values |
+| `PBI_CV_<GUID>` (custom visuals) | varies by visual (Category, Value, etc.) |
+| `deneb<GUID>` (Deneb/Vega) | dataset |
 
 ### Projection Properties
 
@@ -424,6 +431,120 @@ Error bars can use measure-driven bounds via `errorRange.explicit.lowerBound` / 
 | `error` | yes | yes | -- | -- | yes |
 | `forecast` | yes | -- | -- | -- | -- |
 | `anomalyDetection` | yes | -- | -- | -- | -- |
+
+## Matrix/Table Features
+
+### Expansion States (pivotTable)
+
+Controls which hierarchy levels are expanded when the report loads. Lives as a sibling of `objects` inside `visual`:
+
+```json
+"visual": {
+  "visualType": "pivotTable",
+  "expansionStates": [{
+    "roles": ["Rows"],
+    "levels": [
+      {
+        "queryRefs": ["Products.Type"],
+        "identityKeys": [{"Column": {"Expression": {"SourceRef": {"Entity": "Products"}}, "Property": "Type"}}],
+        "isPinned": true
+      },
+      {
+        "queryRefs": ["Products.Subtype"],
+        "isCollapsed": true,
+        "identityKeys": [{"Column": {"Expression": {"SourceRef": {"Entity": "Products"}}, "Property": "Subtype"}}],
+        "isPinned": true
+      }
+    ],
+    "root": {}
+  }],
+  "objects": {...}
+}
+```
+
+- `roles`: `"Rows"` or `"Columns"`
+- `isCollapsed: true` -- level starts collapsed
+- `isPinned: true` -- persists expansion across interactions
+
+### Sub-Totals (pivotTable)
+
+```json
+"subTotals": [
+  {
+    "properties": {
+      "rowSubtotals": {"expr": {"Literal": {"Value": "true"}}},
+      "columnSubtotals": {"expr": {"Literal": {"Value": "true"}}}
+    }
+  },
+  {
+    "properties": {
+      "bold": {"expr": {"Literal": {"Value": "true"}}},
+      "fontColor": {"solid": {"color": {"expr": {"ThemeDataColor": {"ColorId": 0, "Percent": -0.3}}}}}
+    },
+    "selector": {"id": "Row"}
+  }
+]
+```
+
+Selector IDs: `"Row"` or `"Column"` for independent row/column subtotal styling.
+
+### Sparkline Formatting (tableEx / pivotTable)
+
+The `SparklineData` field reference adds the sparkline to the query. The `sparklines` formatting object in `objects` styles it:
+
+```json
+"sparklines": [{
+  "properties": {
+    "dataColor": {"solid": {"color": {"expr": {"Literal": {"Value": "'#8D9EA7'"}}}}},
+    "markers": {"expr": {"Literal": {"Value": "144D"}}},
+    "markerColor": {"solid": {"color": {"expr": {"Literal": {"Value": "'#8D9EA7'"}}}}},
+    "strokeWidth": {"expr": {"Literal": {"Value": "2L"}}}
+  },
+  "selector": {"metadata": "SparklineData(Comparison.AOP MTD vs. Gross Sales (D)_[Date.Workdays MTD])"}
+}]
+```
+
+The `selector.metadata` must match the exact `queryRef` of the SparklineData projection. `markers` is a bitmask (144D = show first + last markers).
+
+### Per-Column Formatting (tableEx / pivotTable)
+
+```json
+"columnFormatting": [{
+  "properties": {
+    "labelDisplayUnits": {"expr": {"Literal": {"Value": "1000000D"}}},
+    "formatString": {"expr": {"Literal": {"Value": "'$#,##0.00'"}}},
+    "alignment": {"expr": {"Literal": {"Value": "'right'"}}}
+  },
+  "selector": {"metadata": "Sales.Revenue"}
+}]
+```
+
+Can also include `dataBars` and `fontColor` per column. Each entry targets one column via `metadata` selector.
+
+## Small Multiples
+
+Many chart types support small multiples -- a grid of the same chart broken out by a dimension. Configured via the `Series` query role and `smallMultiplesLayout` in `objects`:
+
+```json
+"query": {
+  "queryState": {
+    "Category": {"projections": [...]},
+    "Y": {"projections": [...]},
+    "Series": {"projections": [{"field": {"Column": {"Expression": {"SourceRef": {"Entity": "Products"}}, "Property": "Category"}}}]}
+  }
+}
+```
+
+```json
+"smallMultiplesLayout": [{
+  "properties": {
+    "gridLineType": {"expr": {"Literal": {"Value": "'inner'"}}},
+    "backgroundTransparency": {"expr": {"Literal": {"Value": "0D"}}}
+  }
+}]
+```
+
+Supported on: lineChart, areaChart, barChart, columnChart, comboChart, and their stacked/100% variants.
 
 ## Related
 

@@ -50,12 +50,12 @@ The key to per-data-point conditional formatting.
 
 ### Why dataViewWildcard?
 
-**❌ metadata selector** - Evaluates once per series (all segments same color):
+**WRONG: metadata selector** - Evaluates once per series (all segments same color):
 ```json
 "selector": {"metadata": "Sales.Revenue"}
 ```
 
-**✅ dataViewWildcard** - Evaluates per data point (each segment can differ):
+**RIGHT: dataViewWildcard** - Evaluates per data point (each segment can differ):
 ```json
 "selector": {
   "data": [{"dataViewWildcard": {"matchingOption": 1}}]
@@ -267,9 +267,9 @@ IF(
 - Accept single-color lines for multi-series
 
 **Property limitations:** `segmentGradient` only works with `strokeColor`, not:
-- ❌ `lineStyle` (dash patterns)
-- ❌ `strokeWidth` (line thickness)
-- ❌ `markerFill` (marker colors)
+- NOT `lineStyle` (dash patterns)
+- NOT `strokeWidth` (line thickness)
+- NOT `markerFill` (marker colors)
 
 ## Pattern 3: Data Labels
 
@@ -716,6 +716,51 @@ Bar chart with comprehensive conditional formatting:
         }
       }
     ]
+  }
+}
+```
+
+## Properties That Support Conditional Formatting
+
+Not every property can accept a measure expression. These properties support measure-based or rule-based conditional formatting (from the pbir object model):
+
+`fill`, `borderColor`, `defaultColor`, `fontColor`, `color`, `backgroundColor`, `lineColor`, `markerColor`, `strokeColor`, `text`, `titleText`, `fontSize`, `strokeWidth`, `weight`, `transparency`, `radius`, `url`, `good`, `bad`, `neutral`, `target`, `icon`
+
+Properties NOT listed here only accept literal values or ThemeDataColor -- they cannot be driven by measures.
+
+### Data Bars (tables/matrices)
+
+Tables and matrices support data bars via the `dataBars` property on column formatting:
+
+```json
+"dataBars": {
+  "positiveColor": {"solid": {"color": {"expr": {"Literal": {"Value": "'#E1EBF2'"}}}}},
+  "negativeColor": {"solid": {"color": {"expr": {"Literal": {"Value": "'#E5B97D'"}}}}},
+  "axisColor": {"solid": {"color": {"expr": {"Literal": {"Value": "'#FFFFFF'"}}}}},
+  "reverseDirection": {"expr": {"Literal": {"Value": "false"}}},
+  "hideText": {"expr": {"Literal": {"Value": "false"}}}
+}
+```
+
+### Conditional Icons
+
+Icons use the `Conditional` expression returning icon set names:
+
+```json
+"icon": {
+  "kind": "Icon",
+  "layout": {"expr": {"Literal": {"Value": "'IconOnly'"}}},
+  "value": {
+    "expr": {
+      "Conditional": {
+        "Cases": [
+          {
+            "Condition": {"Comparison": {"ComparisonKind": 4, "Left": {"Measure": {...}}, "Right": {"Literal": {"Value": "0D"}}}},
+            "Value": {"Literal": {"Value": "'SymbolMedium'"}}
+          }
+        ]
+      }
+    }
   }
 }
 ```

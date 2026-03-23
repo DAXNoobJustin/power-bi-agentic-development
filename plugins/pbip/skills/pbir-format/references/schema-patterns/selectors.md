@@ -104,7 +104,7 @@ Visual calculations (NativeVisualCalculation) always have `queryRef: "select"`, 
 | Value | Constant | Description | Use Case |
 |-------|----------|-------------|----------|
 | 0 | Identities+Totals | Match identities and totals (default) | Series-level (WRONG for per-point) |
-| 1 | Instances only | Match instances with identities only | ✓ Per-point conditional formatting |
+| 1 | Instances only | Match instances with identities only | Per-point conditional formatting (most common) |
 | 2 | Totals only | Match totals only | Total row formatting |
 
 **CRITICAL:** Use `matchingOption: 1` for per-point conditional formatting

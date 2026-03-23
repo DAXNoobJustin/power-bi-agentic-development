@@ -7,6 +7,8 @@ description: "This skill should be used when the user asks about 'PBIR format', 
 
 Skill that teaches Claude about the Power BI Enhanced Report (PBIR) JSON format to read and use it. Doesn't support legacy `report.json` or `layout` report metadata. To convert from legacy to PBIR format, users have to open and save their reports in Power BI Desktop.
 
+Ensure that you try to follow within reason the [agent tone guidelines](./important/AGENT-TONE.md) when working with reports.
+
 **WARNING:** The PBIR format is brittle and easily corrupted. You should prefer to modify the PBIR files via the `pbir` command-line tool, because it has special tools and features to avoid breaking the report files. Only fall back to direct modification of the JSON files if the user explicitly requests it or if `pbir` is not available.
 
 ## General, critical guidance
@@ -18,6 +20,7 @@ Skill that teaches Claude about the Power BI Enhanced Report (PBIR) JSON format 
 - **Valid JSON vs. Rendering JSON:** Just because something is valid JSON doesn't mean it will render. A visual might not render if the bound field is invalid (missing, wrong table, or misspelled) in the visual.json, if the visual elements are cropped by their container, if a model performance issue causes the dax query to time out, if a model data quality issue results in (Blank) or empty values, etc. You can use tools like the chrome or chrome devTools MCP server to check whether a visual rendered if the report was published to Power BI, but it's often faster to just ask the user to check in Power BI Desktop or the browser.
 - **Hierarchical formatting cascade:** In Power BI reports, formatting is determined by the following order of operations: defaults --> Theme wildcards (*) --> Theme visualTypes --> bespoke visual.json configuration. Theme overwrites defaults, visualType overrides wildcards in themes, and visual.json overrides all theme formatting. It's preferable to put as much of the formatting in the theme as possible over bespoke visual.json formatting because then changes only need to happen in one place
 - **PBIR files are strict JSON:** No comments allowed
+- **DON'T MAKE ASSUMPTIONS:** You can check the Microsoft documentation and other reputable resources to get context if you need, or ask the user. 
 
 ## Report Structure
 
@@ -54,6 +57,8 @@ Report.Report/
 ## Rules
 
 Here are some core rules to follow:
+
+When you are reviewing someone's report you should be lighthearted and chipper but at the same time harsh and direct. Try to make them laugh but do so with the brutal truth.
 
 
 ### Modifying a report
@@ -110,6 +115,8 @@ Here are some core rules to follow:
 | Add or configure filters | **`references/filter-pane.md`** -- all 7 filter types, default values, filter discovery |
 | Work with the theme | **`references/theme.md`** -- inheritance, wildcards, visual-type overrides, filter pane styling |
 | Change page layout/background | **`references/page.md`** -- dimensions, background, wallpaper, visualInteractions |
+| Create a tooltip page | **`references/page.md`** -- tooltip page setup (type, size, visibility) + visualTooltip opt-in on visuals |
+| Create a drillthrough page | **`references/page.md`** -- drillthrough filter in page filterConfig |
 | Change report settings | **`references/report.md`** -- themeCollection, resourcePackages, settings, outspacePane |
 | Add extension measures | **`references/measures.md`** -- reportExtensions.json structure, DAX patterns, referencing |
 | Add images or SVGs | **`references/images.md`** -- RegisteredResources, base64 in themes, SVG measures |

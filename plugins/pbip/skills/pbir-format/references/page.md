@@ -16,9 +16,9 @@
 - `height`, `width`: Page dimensions (numbers) - **Preferred: width=1920, height=1080**
 - `verticalAlignment`: Vertical alignment of page canvas - `"Top"`, `"Middle"`, or `"Bottom"` (string)
 - `horizontalAlignment`: Horizontal alignment of page canvas - `"Left"`, `"Center"`, or `"Right"` (string)
-- `type`: "Default", "Tooltip"
-- `visibility`: "AlwaysVisible", "HiddenInViewMode"
-- `filterConfig`: Page-level filters
+- `type`: `"Default"` or `"Tooltip"` (see Tooltip Pages below)
+- `visibility`: `"AlwaysVisible"` or `"HiddenInViewMode"` (hidden pages don't show in page tabs)
+- `filterConfig`: Page-level filters (see [filter-pane.md](./filter-pane.md))
 - `pageBinding`: Parameter bindings for Q&A
 - `visualInteractions`: Cross-visual interaction overrides (see below)
 - `objects`: Formatting objects for page-level formatting
@@ -34,6 +34,111 @@ Override default cross-filtering between visuals on this page:
 ```
 
 Types: `"NoFilter"` (disable cross-filter), `"Filter"`, `"Highlight"`.
+
+### Tooltip Pages
+
+Tooltip pages are small hidden pages that display as rich tooltips when users hover over visuals. They need three things: the page setup, the visual opt-in, and a smaller canvas size.
+
+**Page setup** (page.json):
+
+```json
+{
+  "$schema": "...page/2.0.0/schema.json",
+  "name": "tooltip_page_id",
+  "displayName": "Revenue Tooltip",
+  "displayOption": "ActualSize",
+  "width": 320,
+  "height": 240,
+  "type": "Tooltip",
+  "visibility": "HiddenInViewMode"
+}
+```
+
+Key properties:
+- `type: "Tooltip"` -- marks this as a tooltip page
+- `visibility: "HiddenInViewMode"` -- hides from page tabs (users shouldn't navigate to it)
+- `displayOption: "ActualSize"` -- tooltip pages don't scale
+- Common sizes: 320x240 (default), 400x120 (wide/compact), or custom
+
+The tooltip page contains regular visuals (cards, textboxes, charts) that show contextual data. Put visuals on it like any other page.
+
+**Visual opt-in** (visual.json `visualContainerObjects`):
+
+To make a visual show this tooltip page on hover, set `visualTooltip` in the visual's `visualContainerObjects`:
+
+```json
+"visualContainerObjects": {
+  "visualTooltip": [{
+    "properties": {
+      "show": {"expr": {"Literal": {"Value": "true"}}},
+      "type": {"expr": {"Literal": {"Value": "'ReportPage'"}}},
+      "section": {"expr": {"Literal": {"Value": "'tooltip_page_id'"}}}
+    }
+  }]
+}
+```
+
+- `type: "'ReportPage'"` -- use a report page as tooltip (vs `"'Default'"` for auto/default tooltip)
+- `section` -- the `name` property from the tooltip page's page.json (NOT the displayName)
+
+To disable tooltips on a visual: `"show": {"expr": {"Literal": {"Value": "false"}}}`.
+
+**Tooltip formatting** -- when using the default tooltip (not a report page), you can style it directly. These are honestly the kind of things that are better done in the theme, but if you must do it per-visual:
+
+```json
+"visualTooltip": [{
+  "properties": {
+    "show": {"expr": {"Literal": {"Value": "true"}}},
+    "type": {"expr": {"Literal": {"Value": "'Default'"}}},
+    "titleFontColor": {"solid": {"color": {"expr": {"Literal": {"Value": "'#333333'"}}}}},
+    "valueFontColor": {"solid": {"color": {"expr": {"Literal": {"Value": "'#666666'"}}}}},
+    "fontSize": {"expr": {"Literal": {"Value": "12D"}}},
+    "fontFamily": {"expr": {"Literal": {"Value": "'Segoe UI'"}}},
+    "bold": {"expr": {"Literal": {"Value": "false"}}},
+    "background": {"solid": {"color": {"expr": {"Literal": {"Value": "'#FFFFFF'"}}}}},
+    "transparency": {"expr": {"Literal": {"Value": "0D"}}}
+  }
+}]
+```
+
+All `visualTooltip` formatting properties: `show`, `type`, `section`, `titleFontColor`, `valueFontColor`, `fontSize`, `fontFamily`, `bold`, `italic`, `underline`, `background`, `transparency`, `actionFontColor`, `themedTitleFontColor`, `themedBackground`, `themedValueFontColor`.
+
+There's also `visualHeaderTooltip` which styles the tooltip that appears when hovering over the visual header icons -- same idea, slightly different property set: `type`, `section`, `text`, `titleFontColor`, `fontSize`, `fontFamily`, `bold`, `italic`, `underline`, `background`, `transparency`.
+
+To disable tooltips on a visual: `"show": {"expr": {"Literal": {"Value": "false"}}}`.
+
+Additional `visualTooltip` styling properties: `titleFontColor`, `valueFontColor`, `fontSize`, `fontFamily`, `background`, `transparency`, `bold`, `italic`, `underline`.
+
+### Drillthrough Pages
+
+Drillthrough pages let users right-click a data point and navigate to a detail page filtered to that value. The drillthrough target is configured via page-level filters with specific drillthrough properties.
+
+A drillthrough page is a regular page (`type: "Default"`) with a drillthrough filter in its `filterConfig`:
+
+```json
+{
+  "name": "drillthrough_page_id",
+  "displayName": "Customer Details",
+  "displayOption": "FitToPage",
+  "width": 1920,
+  "height": 1080,
+  "filterConfig": {
+    "filters": [{
+      "name": "drillthrough_filter_id",
+      "field": {
+        "Column": {
+          "Expression": {"SourceRef": {"Entity": "Customers"}},
+          "Property": "Customer Name"
+        }
+      },
+      "type": "Categorical",
+      "howCreated": "User"
+    }]
+  }
+}
+```
+
+When a user right-clicks a data point that contains "Customer Name", Power BI offers to navigate to this page with the filter applied. The page's visuals then show data for that specific customer.
 
 ### Page Canvas Alignment
 

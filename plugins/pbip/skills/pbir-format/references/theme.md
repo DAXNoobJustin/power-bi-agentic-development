@@ -192,26 +192,26 @@ vim tmp/ReportName/ReportName.Report/StaticResources/RegisteredResources/CustomT
 
 ### Modify the Theme When:
 
-✅ The formatting issue affects ALL visuals of a type (e.g., all textboxes)
-✅ You want to change the default for future visuals
-✅ The current default is clearly wrong for a visual type
-✅ You're establishing design system standards
+- The formatting issue affects ALL visuals of a type (e.g., all textboxes)
+- You want to change the default for future visuals
+- The current default is clearly wrong for a visual type
+- You're establishing design system standards
 
 **Example:** Textboxes shouldn't have titles/borders by default
 
 ### Modify the Visual When:
 
-✅ One specific visual needs different formatting than others of its type
-✅ The theme default is correct for most cases, but this is an exception
-✅ The formatting is content-specific (e.g., highlighting a specific metric)
+- One specific visual needs different formatting than others of its type
+- The theme default is correct for most cases, but this is an exception
+- The formatting is content-specific (e.g., highlighting a specific metric)
 
 **Example:** One textbox needs a red background to highlight an error
 
 ### Modify the Page When:
 
-✅ All visuals on the page need the same override
-✅ Page-level settings like alignment or spacing
-✅ Page background or watermark
+- All visuals on the page need the same override
+- Page-level settings like alignment or spacing
+- Page background or watermark
 
 **Example:** Dashboard page has different background than detail pages
 

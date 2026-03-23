@@ -67,8 +67,8 @@ wrong arg[0]=extensions value [ { "name": "extension" } ]
 ```
 
 **When to include reportExtensions.json:**
-- ✅ When you have at least one extension measure defined
-- ❌ When you have no extension measures (delete the file)
+- YES: When you have at least one extension measure defined
+- NO: When you have no extension measures (delete the file)
 
 **Moving from extension measures to model measures:**
 If you move all extension measures to the semantic model (e.g., from `reportExtensions.json` to TMDL tables), remember to:
@@ -1047,10 +1047,10 @@ Check data type matches property:
 Check return format:
 ```dax
 // For colors - use theme colors or hexes:
-"bad"      // ✓ Preferred
-"#FF0000"  // ✓ Correct but prefer theme colors instead
-"red"      // ✗ Wrong - will render, but not preferred
-"rgb(255,0,0)"  // ✗ Wrong
+"bad"      // Preferred (theme color)
+"#FF0000"  // OK but prefer theme colors instead
+"red"      // Works, but not preferred
+"rgb(255,0,0)"  // Wrong format
 ```
 
 Check selector for per-point evaluation:
