@@ -29,14 +29,14 @@ Generate inline SVG graphics using DAX measures that return SVG markup strings. 
 
 Before writing DAX, design the SVG visually:
 
-1. **Query the model first** -- use `te query` or DAX Studio to get actual values with the intended filter context. Use real numbers, not placeholders.
+1. **Query the model first** -- use DAX Studio or Tabular Editor CLI to get actual values with the intended filter context. Use real numbers, not placeholders.
 2. **Write static SVG to a temp file** -- save to `/tmp/mockup.svg` and `open` it in a browser to preview layout, colors, and proportions.
 3. **Ask for feedback** before converting to DAX -- iterating on static SVG is far easier than on DAX string concatenation.
 4. **Colors must be hex codes with `#`** -- e.g., `fill='#2B7A78'`. Never use `%23` URL encoding or named colors. Always hex.
 
 ### Step 1: Create the Extension Measure
 
-Use the `pbir` CLI or manually create the visual.json file (see the `pbir-format` skill in the pbip plugin for JSON structure).
+Create the extension measure in `reportExtensions.json` manually (see the `pbir-format` skill in the pbip plugin for JSON structure).
 
 ```python
 # Example using pbir_object_model (if available):
@@ -73,14 +73,11 @@ Extension measures use `"Schema": "extension"` in the SourceRef:
 }
 ```
 
-For **image visuals**, use `pbir add visual image --image Table.MeasureName` or set `sourceType='imageData'` with `sourceField` (see `references/svg-image-visual.md`).
+For **image visuals**, set `sourceType='imageData'` with `sourceField` in the visual.json (see `references/svg-image-visual.md`).
 
 ### Step 3: Validate
 
-```bash
-pbir validate "Report.Report"
-pbir dax measures list "Report.Report"
-```
+Validate JSON syntax with `jq empty <reportExtensions.json>` and inspect the file to confirm measure definitions and data categories.
 
 ## DAX SVG Fundamentals
 
@@ -167,7 +164,7 @@ VAR Lines = CONCATENATEX(
 ### By Visual Type
 
 - **`references/svg-table-matrix.md`** -- Patterns for Table/Matrix: data bar, bullet chart, dumbbell, overlapping bars, lollipop, status pill, sparkline, bar sparkline, area sparkline, UDF patterns. Includes axis normalization, sort trick, and image size configuration.
-- **`references/svg-image-visual.md`** -- Patterns for Image visuals: KPI header, sparkline with endpoint, dashboard tile. Covers sourceType, CLI binding (`pbir add visual image --image`), Python API, and design considerations.
+- **`references/svg-image-visual.md`** -- Patterns for Image visuals: KPI header, sparkline with endpoint, dashboard tile. Covers sourceType, Python API, and design considerations.
 - **`references/svg-card-slicer.md`** -- Patterns for Card/Slicer: arrow indicator, mini gauge, mini donut, progress bar. Card binding via `callout.imageFX`.
 
 ### General

@@ -47,9 +47,7 @@ Order columns by importance, left to right:
 
 **Always sort by the most important measure, descending.** Alphabetical sorting rarely answers useful questions. The top rows should show the largest/most significant items -- often the variance or gap column rather than the absolute value. This aligns with how business users read tables: they care about top contributors or biggest deviations first.
 
-```bash
-pbir visuals sort "Report.Report/Page.Page/Visual.Visual" -f "Table.Measure" -d Descending
-```
+Set the sort configuration in the visual.json `query` block by specifying the sort field and direction (Descending).
 
 For time-based detail tables (e.g., daily breakdown), sort ascending by date instead.
 
@@ -70,12 +68,7 @@ This is counterintuitive -- many designers add formatting elements to "improve" 
 
 Most table formatting should come from the theme. Only override at the visual level for genuinely one-off cases.
 
-```bash
-# Check what the theme already provides
-pbir visuals format "Report.Report/Page.Page/Visual.Visual" -p grid
-pbir visuals format "Report.Report/Page.Page/Visual.Visual" -p columnHeaders
-pbir visuals format "Report.Report/Page.Page/Visual.Visual" -p values
-```
+Check what the theme already provides by inspecting the theme.json `visualStyles` for `tableEx` and `pivotTable` entries (grid, columnHeaders, values properties).
 
 ### Key Formatting Properties
 
@@ -105,10 +98,7 @@ Conditional formatting is the primary tool for offloading cognitive work from th
 
 Apply data bars to the **primary measure column** (orders, revenue, volume). Data bars let readers compare magnitudes at a glance without reading numbers. They transform a column of numbers into a scannable visual pattern.
 
-```bash
-pbir visuals cf "Report.Report/Page.Page/Visual.Visual" \
-  --measure "values.dataBar Orders.Order Lines"
-```
+Configure data bars in the visual.json `objects` by setting the `dataBar` property on the relevant measure column.
 
 ### Color Scales on Variance Columns
 
@@ -117,15 +107,13 @@ Apply color scales to **variance/delta columns only** -- not to absolute values.
 - Red/warm tones for negative/underperformance
 - Blue/cool tones for positive/overperformance (avoid green for accessibility)
 
-```bash
-# Color a variance column
-pbir dax measures add "Report.Report" -t _Fmt -n "OTD Color" \
-  -e 'IF([OTD % (Lines)] >= 0.9, "good", IF([OTD % (Lines)] >= 0.8, "neutral", "bad"))' \
-  --data-type Text
+Create an extension measure for color (e.g., in `reportExtensions.json`):
 
-pbir visuals cf "Report.Report/Page.Page/Visual.Visual" \
-  --measure "values.fontColor _Fmt.OTD Color"
+```dax
+OTD Color = IF([OTD % (Lines)] >= 0.9, "good", IF([OTD % (Lines)] >= 0.8, "neutral", "bad"))
 ```
+
+Then bind it as a conditional formatting rule for `values.fontColor` in the visual.json objects.
 
 ### Directional Indicators
 
@@ -145,11 +133,7 @@ Triangle or arrow symbols with color coding can indicate direction (up/down) alo
 
 Sparklines add temporal context that answers "is this improving or declining?" -- information that a single number cannot convey. They distinguish between a product that is currently behind target but improving vs. one that is declining.
 
-```bash
-# Native Power BI sparkline (add to table/matrix)
-pbir visuals bind "Report.Report/Page.Page/Visual.Visual" \
-  -a "Values:Orders.Order Lines" --sparkline "Date.Date"
-```
+Add a native Power BI sparkline by binding a measure to the `Values` role with a sparkline date field in the visual.json query block.
 
 For richer inline visuals (dumbbell charts, bullet charts, progress bars), use SVG extension measures via the `/svg-visuals` skill. The trade-off: higher development and maintenance overhead vs. richer context. Use only when benefits justify added complexity.
 
@@ -159,14 +143,7 @@ For richer inline visuals (dumbbell charts, bullet charts, progress bars), use S
 
 Bind categories in order from broadest to most granular:
 
-```bash
-pbir add visual matrix "Report.Report/Page.Page" --title "Detail" \
-  -d "Rows:Customers.Key Account Name" \
-  -d "Rows:Customers.Account Name" \
-  -d "Rows:Products.Product Name" \
-  -d "Values:Orders.Order Lines" \
-  -d "Values:Orders.Net Orders"
-```
+Create a matrix visual.json file manually (see `pbir-format` skill in the pbip plugin for JSON structure) with title "Detail" and field bindings: `Rows: Customers.Key Account Name`, `Rows: Customers.Account Name`, `Rows: Products.Product Name`, `Values: Orders.Order Lines`, `Values: Orders.Net Orders`.
 
 ### Subtotals
 
@@ -180,11 +157,7 @@ By default, matrices start collapsed to the top level. This is the preferred beh
 
 Use column headers for time periods or categorical pivots:
 
-```bash
-# Pivot by quarter
-pbir visuals bind "Report.Report/Page.Page/Visual.Visual" \
-  -a "Columns:Date.Calendar Quarter (ie Q1)"
-```
+Add a column hierarchy binding for `Columns: Date.Calendar Quarter (ie Q1)` in the visual.json query block.
 
 ## Sizing
 
@@ -198,13 +171,11 @@ pbir visuals bind "Report.Report/Page.Page/Visual.Visual" \
 
 When auto-size is off, columns distribute proportionally within the visual's width. This may truncate long text values, but truncation with a tooltip is better than a scrollbar that hides entire columns off-screen.
 
-```bash
-# Disable auto-size width on a table or matrix
-pbir set "Report.Report/Page.Page/Visual.Visual.columnHeaders.autoSizeColumnWidth" --value false
+Set `columnHeaders.autoSizeColumnWidth` to `false` in the visual.json objects:
 
-# The property lives under columnHeaders, not columnWidth:
-#   columnHeaders.autoSizeColumnWidth = false  -> columns fit container proportionally
-#   columnWidth.value = <pixels>               -> fixed width (only when autoSize is off)
+```
+columnHeaders.autoSizeColumnWidth = false  -> columns fit container proportionally
+columnWidth.value = <pixels>               -> fixed width (only when autoSize is off)
 ```
 
 **Rule of thumb**: If the table is full-width (margin to margin), auto-size is usually fine. If the table shares a row with another visual (e.g., bar chart left, matrix right), disable auto-size width.

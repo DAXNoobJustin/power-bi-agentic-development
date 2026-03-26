@@ -5,7 +5,7 @@ description: "This skill should be used when the user asks to 'create an R visua
 
 # R Visuals in Power BI (PBIR)
 
-R visuals execute R scripts (primarily ggplot2) to render static PNG images on the Power BI canvas. Create and inject R scripts using `pbir` CLI.
+R visuals execute R scripts (primarily ggplot2) to render static PNG images on the Power BI canvas.
 
 ## Visual Identity
 
@@ -19,12 +19,7 @@ R visuals execute R scripts (primarily ggplot2) to render static PNG images on t
 
 ### Step 1: Add the Visual
 
-```bash
-pbir add visual scriptVisual "Report.Report/Page.Page" \
-  --name r_chart \
-  -d Values:Date.Date Values:Orders.Sales \
-  --x 40 --y 260 -w 800 -h 400
-```
+Create the visual.json file manually (see `pbir-format` skill in the pbip plugin for JSON structure) with `visualType: scriptVisual`, field bindings for `Values:Date.Date` and `Values:Orders.Sales`, positioned at x=40, y=260 with width=800 and height=400.
 
 ### Step 2: Write the Script
 
@@ -47,21 +42,11 @@ Critical rules:
 
 ### Step 3: Inject the Script
 
-```bash
-pbir visuals r "Report.Report/Page.Page/r_chart.Visual" \
-  --script-file chart.R
-```
-
-CLI options:
-- `--script-file` / `-f` -- Path to .R file
-- `--script-inline` / `-s` -- Inline script string (alternative)
+Set the script content in the visual's `objects.script[0].properties.source` literal value (see PBIR Format section below). The script text must be escaped as a single-quoted DAX literal string with `\\n` for newlines.
 
 ### Step 4: Validate
 
-```bash
-pbir validate "Report.Report"
-pbir cat "Report.Report/Page.Page/r_chart.Visual"
-```
+Validate JSON syntax with `jq empty <visual.json>` and inspect the visual.json to confirm script content and field bindings.
 
 ## PBIR Format
 
@@ -180,4 +165,4 @@ if (nrow(dataset) == 0) {
 - **`python-visuals`** -- Python Script visuals (same concept, different language)
 - **`deneb-visuals`** -- Vega/Vega-Lite visuals (interactive, vector-based alternative)
 - **`svg-visuals`** -- SVG via DAX measures (lightweight inline graphics)
-- **`pbir-cli`** -- CLI commands for report manipulation
+- **`pbir-format`** (pbip plugin) -- PBIR JSON format reference

@@ -5,7 +5,7 @@ description: "This skill should be used whenever the user mentions 'Deneb' in an
 
 # Deneb Visuals in Power BI (PBIR)
 
-Deneb is a certified custom visual for Power BI that enables Vega and Vega-Lite declarative visualization specs directly inside reports. Create Deneb visuals with `pbir` CLI and author specs using this skill.
+Deneb is a certified custom visual for Power BI that enables Vega and Vega-Lite declarative visualization specs directly inside reports. Author specs using this skill.
 
 ## Provider Policy
 
@@ -21,7 +21,7 @@ Deneb is a certified custom visual for Power BI that enables Vega and Vega-Lite 
 
 ## Custom Visual Registration (Required)
 
-Register `deneb7E15AEF80B9E4D4F8E12924291ECE89A` in `report.json` `publicCustomVisuals` array manually -- `pbir add visual` does not auto-register custom visuals. Without this, the visual shows "Can't display this visual."
+Register `deneb7E15AEF80B9E4D4F8E12924291ECE89A` in `report.json` `publicCustomVisuals` array manually. Without this, the visual shows "Can't display this visual."
 
 ```json
 {
@@ -33,12 +33,7 @@ Register `deneb7E15AEF80B9E4D4F8E12924291ECE89A` in `report.json` `publicCustomV
 
 ### Step 1: Add the Visual
 
-```bash
-pbir add visual deneb7E15AEF80B9E4D4F8E12924291ECE89A "Report.Report/Page.Page" \
-  --name trend_chart \
-  -d dataset:Date.Date dataset:Orders.Sales \
-  --x 40 --y 260 -w 800 -h 320
-```
+Create the visual.json file manually (see `pbir-format` skill in the pbip plugin for JSON structure) with `visualType: deneb7E15AEF80B9E4D4F8E12924291ECE89A`, field bindings for `dataset:Date.Date` and `dataset:Orders.Sales`, positioned at x=40, y=260 with width=800 and height=320.
 
 All fields bind to the single `dataset` role. Use `Table.Column` for columns and `Table.Measure` for measures.
 
@@ -84,25 +79,11 @@ Field names in the spec must match the `nativeQueryRef` (display name) from the 
 
 ### Step 3: Inject the Spec
 
-```bash
-pbir visuals deneb "Report.Report/Page.Page/trend_chart.Visual" \
-  --spec-file chart-spec.json \
-  --config-file config.json \
-  --provider vega
-```
-
-CLI options:
-- `--spec-file` / `-f` -- Path to JSON spec file
-- `--spec-inline` / `-s` -- Inline JSON spec string (alternative to file)
-- `--provider` / `-p` -- `vega` (default for new) or `vegaLite`
-- `--config-file` / `-c` -- Optional config JSON for styling
+Set the spec and config in the visual's `objects.vega[0].properties` as single-quoted DAX literal strings. The `jsonSpec` property holds the Vega spec (stringified JSON), `jsonConfig` holds the config, and `provider` is set to `'vega'` or `'vegaLite'`. See the PBIR structure reference (`references/pbir-structure.md`) for the full encoding pattern.
 
 ### Step 4: Validate
 
-```bash
-pbir validate "Report.Report"
-pbir cat "Report.Report/Page.Page/trend_chart.Visual"
-```
+Validate JSON syntax with `jq empty <visual.json>` and inspect the visual.json to confirm spec content and field bindings.
 
 ## Spec Authoring Rules
 
@@ -153,7 +134,7 @@ Use Power BI theme colors instead of hardcoded hex values:
 
 ## Interactivity
 
-Enable interactivity via the `vega` objects in visual.json or through `pbir set`:
+Enable interactivity via the `vega` objects in visual.json:
 
 | Feature | Property | Default | Notes |
 |---------|----------|---------|-------|
@@ -201,7 +182,6 @@ Deneb injects `__identity__` (row context), `__selected__` (selection state), an
 
 ## Related Skills
 
-- **`pbir-cli`** -- CLI commands for report manipulation
 - **`pbir-format`** (pbip plugin) -- PBIR JSON format reference
 - **`pbi-report-design`** -- Layout and design best practices
 - **`r-visuals`** -- R Script visuals (ggplot2)

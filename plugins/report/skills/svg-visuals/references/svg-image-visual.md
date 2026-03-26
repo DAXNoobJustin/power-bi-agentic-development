@@ -8,21 +8,13 @@ For `data:image/svg+xml;utf8,...` data URIs, the image visual **must** use `sour
 
 ## Binding an SVG Measure to an Image Visual
 
-### Via CLI
+### Via JSON
 
-```bash
-# Create image visual bound to a DAX SVG measure
-pbir add visual image "Report.Report/Page.Page" --image _Fmt.SparklineSVG --title "Sparkline"
-```
-
-The `--image` parameter accepts:
-- **Measure reference** (e.g., `_Fmt.SparklineSVG`) -- binds the visual to a DAX measure that returns SVG
-- **File path** (e.g., `logo.png`) -- copies the file to RegisteredResources and binds as a static image
-- **URL** (e.g., `https://example.com/logo.png`) -- binds to an external URL
+Create the image visual.json file manually (see `pbir-format` skill in the pbip plugin for JSON structure). Set `sourceType` to `'imageData'` and bind the `sourceField` to the SVG measure reference (e.g., `_Fmt.SparklineSVG`).
 
 ### Via Python API
 
-Use the `pbir` CLI or manually create the visual.json file (see the `pbir-format` skill in the pbip plugin for JSON structure).
+Create the visual.json file manually (see the `pbir-format` skill in the pbip plugin for JSON structure).
 
 ```python
 # Example using pbir_object_model (if available):

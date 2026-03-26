@@ -98,7 +98,7 @@ For highlights and emphasis:
 2. **Measure-driven preferred** -- Prefer extension measures returning theme tokens over built-in gradient/rules. Measure logic lives in one place; change the measure or theme and it propagates. Use `--to-measure` to convert built-in CF.
 3. **Sparingly applied** -- CF should highlight exceptions, not decorate everything. Formatting everything means formatting nothing. Apply to variance/gap columns, not raw values.
 4. **Accessible** -- Use blue/orange instead of red/green for colorblind safety. Always pair color with a secondary cue (icon, text, shape).
-5. **Theme-first hierarchy** -- Check theme sentiment colors exist before applying CF. Create them if missing: `pbir theme set-colors "Report.Report" --good "#00B050" --bad "#FF0000" --neutral "#FFC000"`
+5. **Theme-first hierarchy** -- Check theme sentiment colors exist before applying CF. Create them if missing by setting `good`, `bad`, and `neutral` sentiment colors in the theme.json file (e.g., good="#00B050", bad="#FF0000", neutral="#FFC000")
 
 ### Positive/Negative Pattern
 

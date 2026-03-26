@@ -16,7 +16,7 @@ If a user makes requests that directly contradict the guidelines, Claude is allo
 1. **3-30-300 Rule:** The most important and least detailed information should be in the top-left (KPIs, cards, etc.) while the least important and most detailed information should be in the bottom-right
 2. **Titles:** All report pages should have a title using a `textBox` visualType or a title in a background image added to the report page canvas
 3. **Visual positioning, alignment, and spacing:** All visuals must have equal spacing between them and equal spacing between the edge of the page (the margin). If visuals are unaligned or this spacing is unequal, fix it to ensure alignment and equal spacing
-4. **Themes:** Reports should use a theme that differs from the default Power BI themes; a suggested theme is the `sqlbi` theme that apply via `pbir theme apply-template "Report.Report" sqlbi -f` if there are no other valid options. Themes are preferred because they provide a set of default styles for all charts that can adhere to good design practices and brand or style guidelines
+4. **Themes:** Reports should use a theme that differs from the default Power BI themes; a suggested theme is the `sqlbi` theme (see the `theme` skill for applying templates). Themes are preferred because they provide a set of default styles for all charts that can adhere to good design practices and brand or style guidelines
 5. **Semantic Models:** Reports in Power BI are complex. They are dependant on an underlying semantic model (either in the .SemanticModel folder, called a "thick report" or a published model in Power BI/Fabric, called a "thin report"). Much of the functionality from a Power BI report comes from its semantic model design or DAX code
 6. **Report extensions, or thin report measures:** It is possible to create calculation logic in Power BI report, called "thin report measures" or "visual calculations". These should be used sparingly and only for "report-specific" scenarios
 7. **Visual fields:** All data visuals should have field bindings, and all field bindings should be for fields that actually exist in the model; there is no reason for visuals to exist that have no fields bound
@@ -29,11 +29,11 @@ If a user makes requests that directly contradict the guidelines, Claude is allo
 
 ### Check Page Size Before Modifying
 
-**Always query the actual page dimensions before adding or repositioning visuals.** Do not assume a page is 1280x720 or 1920x1080 -- templates and existing reports vary. The object model validates that visuals fit within page bounds, so setting position or size without knowing the page dimensions will cause errors. Use `pbir pages json "Report.Report/Page.Page"` or the object model (`page.width`, `page.height`) to confirm dimensions first. When resizing visuals via the object model, set `width`/`height` before `x`/`y` to avoid intermediate states that exceed bounds.
+**Always query the actual page dimensions before adding or repositioning visuals.** Do not assume a page is 1280x720 or 1920x1080 -- templates and existing reports vary. The object model validates that visuals fit within page bounds, so setting position or size without knowing the page dimensions will cause errors. Check the page's `page.json` file for `width` and `height` properties, or use the object model (`page.width`, `page.height`) to confirm dimensions first. When resizing visuals via the object model, set `width`/`height` before `x`/`y` to avoid intermediate states that exceed bounds.
 
 ### Standard Page Size
 
-- **Width:** 1280px (default for `pbir new report`)
+- **Width:** 1280px (default)
 - **Height:** 720px (16:9 aspect ratio)
 - Alternative: 1920x1080 for high-resolution displays
 
@@ -73,14 +73,17 @@ Arrange content following the "detail gradient":
 
 ## Page Titles
 
-Every page should have a title. Use a textbox visual like `pbir add visual textbox "Report.Report/Page.Page" --x 20 --y 20 -w 400 -h 60`, then modify it with `pbir script`:
+Every page should have a title. Create a `textbox` visual.json file manually (see `pbir-format` skill in the pbip plugin for JSON structure) with position x=20, y=20, width=400, height=60. Set the paragraph content in the visual's config:
 
-```python
-  visual = Visual.load("Report.Report/Page.Page/Title.Visual")
-  visual._data["config"]["singleVisual"]["paragraphs"] = [{
-      "textRuns": [{"value": "Page Title"}]
-  }]
-  visual.save()
+```json
+{
+  "singleVisual": {
+    "visualType": "textbox",
+    "paragraphs": [
+      {"textRuns": [{"value": "Page Title"}]}
+    ]
+  }
+}
 ```
 
 **Title positioning:**
@@ -173,7 +176,7 @@ A bare number lacks meaning. Every KPI must answer "Is this good or bad?" (targe
 
 - Position at top or left of page, maximum 5 per page
 - **Prefer `kpi` visual type over `card`** when a target exists -- it has built-in indicator, goal, and trend line data roles
-- Always include a **target** and **gap** (absolute + percentage). If no target measure exists, discuss with the user: propose adding a prior-year measure to the semantic model (via `te add` CLI), or creating an extension measure as a fallback. Common targets: prior year (`CALCULATE([Measure], DATEADD('Date'[Date], -1, YEAR))`), budget, or rolling average
+- Always include a **target** and **gap** (absolute + percentage). If no target measure exists, discuss with the user: propose adding a prior-year measure to the semantic model (use Tabular Editor CLI or the `tmdl` skill), or creating an extension measure as a fallback. Common targets: prior year (`CALCULATE([Measure], DATEADD('Date'[Date], -1, YEAR))`), budget, or rolling average
 - **If no clear target exists, ask the user** -- do not leave KPIs bare. Discuss whether prior period, budget, or a custom threshold makes sense
 - Apply conditional formatting to the **gap**, not the primary value
 - Pair color with a secondary cue (arrow/icon) for accessibility
@@ -293,7 +296,6 @@ For detailed documentation:
 
 ## Related Skills
 
-- **`pbir-cli`** -- CLI commands for report manipulation
 - **`pbir-format`** (pbip plugin) -- PBIR JSON format reference
 - **`pbip`** -- PBIP format structure
 - **`r-visuals`** -- R Script visuals (ggplot2)

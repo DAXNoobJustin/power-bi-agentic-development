@@ -1,6 +1,6 @@
 # Vega-Lite Chart Patterns for Deneb
 
-Common chart patterns ready to use with `pbir visuals deneb`. All specs assume `"data": {"name": "dataset"}` and Vega-Lite v5.
+Common chart patterns for Deneb visuals. All specs assume `"data": {"name": "dataset"}` and Vega-Lite v5.
 
 ## Bar Chart (Vertical)
 

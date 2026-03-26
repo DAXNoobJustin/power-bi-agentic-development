@@ -136,21 +136,9 @@ Textbox content uses a specific JSON structure:
 ]
 ```
 
-## CLI Commands
+## Creating Title Textboxes
 
-```bash
-# Create title textbox
-pbir new visual textbox "Report.Report/Page.Page" \
-  --title "Sales Overview" \
-  --x 24 --y 24 \
-  --width 500 --height 48 \
-  --font-size 24
-
-# Or using the visuals subcommand
-pbir visuals create "Report.Report/Page.Page" textbox \
-  --title "Page Title" \
-  --x 24 --y 24
-```
+Create a `textbox` visual.json file manually (see `pbir-format` skill in the pbip plugin for JSON structure) with position x=24, y=24, width=500, height=48. Set the paragraph content with the desired title text and font size (e.g., 24pt).
 
 ## Theme Considerations
 

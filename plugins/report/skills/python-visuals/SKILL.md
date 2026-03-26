@@ -5,7 +5,7 @@ description: "This skill should be used when the user asks to 'create a Python v
 
 # Python Visuals in Power BI (PBIR)
 
-Python visuals execute matplotlib/seaborn scripts to render static PNG images on the Power BI canvas. Create and inject Python scripts using `pbir` CLI.
+Python visuals execute matplotlib/seaborn scripts to render static PNG images on the Power BI canvas.
 
 ## Visual Identity
 
@@ -19,12 +19,7 @@ Python visuals execute matplotlib/seaborn scripts to render static PNG images on
 
 ### Step 1: Add the Visual
 
-```bash
-pbir add visual pythonVisual "Report.Report/Page.Page" \
-  --name sales_chart \
-  -d Values:Date.Date Values:Orders.Sales \
-  --x 40 --y 260 -w 800 -h 400
-```
+Create the visual.json file manually (see `pbir-format` skill in the pbip plugin for JSON structure) with `visualType: pythonVisual`, field bindings for `Values:Date.Date` and `Values:Orders.Sales`, positioned at x=40, y=260 with width=800 and height=400.
 
 ### Step 2: Write the Script
 
@@ -47,21 +42,11 @@ Critical rules:
 
 ### Step 3: Inject the Script
 
-```bash
-pbir visuals python "Report.Report/Page.Page/sales_chart.Visual" \
-  --script-file chart.py
-```
-
-CLI options:
-- `--script-file` / `-f` -- Path to .py file
-- `--script-inline` / `-s` -- Inline script string (alternative)
+Set the script content in the visual's `objects.script[0].properties.source` literal value (see PBIR Format section below). The script text must be escaped as a single-quoted DAX literal string with `\\n` for newlines.
 
 ### Step 4: Validate
 
-```bash
-pbir validate "Report.Report"
-pbir cat "Report.Report/Page.Page/sales_chart.Visual"
-```
+Validate JSON syntax with `jq empty <visual.json>` and inspect the visual.json to confirm script content and field bindings.
 
 ## PBIR Format
 
@@ -166,4 +151,4 @@ else:
 - **`r-visuals`** -- R Script visuals (same concept, different language)
 - **`deneb-visuals`** -- Vega/Vega-Lite visuals (interactive, vector-based alternative)
 - **`svg-visuals`** -- SVG via DAX measures (lightweight inline graphics)
-- **`pbir-cli`** -- CLI commands for report manipulation
+- **`pbir-format`** (pbip plugin) -- PBIR JSON format reference
