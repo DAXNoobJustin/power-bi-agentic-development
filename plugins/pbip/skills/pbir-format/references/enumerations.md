@@ -79,7 +79,7 @@ textbox                            [K201] [theme]
 filter                             [theme]
 
 --- Internal ---
-page                               [theme] (page-level theme overrides only)
+page                               [theme] -- theme visualStyles key ONLY; NOT a valid visualType in visual.json
 ```
 
 ## Common Property Values

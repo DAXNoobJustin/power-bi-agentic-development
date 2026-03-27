@@ -214,7 +214,7 @@ Visual calculations (NativeVisualCalculation) always have `queryRef: "select"`, 
 
 **Behavior:** Applies property only when Category = "Electronics"
 
-**Note:** Complex structure, rarely used manually. Usually created by Power BI UI.
+**Note:** Complex structure, rarely used manually. Usually created by Power BI UI. Unlike filter `Where` conditions (which require `Source` alias + `From[]`), scopeId uses `SourceRef.Entity` directly — confirmed in K201 real examples.
 
 ## roles Selector (Role-Based)
 
@@ -275,6 +275,38 @@ Visual calculations (NativeVisualCalculation) always have `queryRef: "select"`, 
 - border (no selector support)
 - categoryAxis (no selector support)
 - valueAxis (no selector support)
+
+## id Selector Values
+
+The `id` field on a selector targets a specific named state of a visual element. Valid values confirmed from K201 `ButtonSlicer_TopCenter.Visual` examples:
+
+| Value | State | Applies to |
+|-------|-------|------------|
+| `"default"` | Base/unselected state | All visuals with stateful formatting |
+| `"selection:selected"` | Selected/active item state | Slicers, action buttons |
+| `"interaction:hover"` | Mouse hover state | Slicers, action buttons, shapes |
+| `"interaction:press"` | Press/click active state | Action buttons, slicers |
+
+**Example — styling a slicer's selected item:**
+
+```json
+"items": [
+  {
+    "properties": {
+      "fontColor": {"solid": {"color": {"expr": {"Literal": {"Value": "'#000000'"}}}}}
+    },
+    "selector": {"id": "default"}
+  },
+  {
+    "properties": {
+      "fontColor": {"solid": {"color": {"expr": {"Literal": {"Value": "'#FFFFFF'"}}}}}
+    },
+    "selector": {"id": "selection:selected"}
+  }
+]
+```
+
+**Note:** Not all visual types support all `id` values. Slicers and action buttons have the richest set. Other visuals may only support `"default"`.
 
 ## Advanced Properties
 

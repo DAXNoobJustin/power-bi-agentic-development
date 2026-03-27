@@ -602,6 +602,23 @@ Some properties require nested expr structures:
 }
 ```
 
+## SourceRef Context Rules
+
+**Critical gotcha:** `SourceRef` uses different fields depending on context.
+
+| Context | SourceRef field | Example |
+|---------|----------------|---------|
+| Query projections (`queryState`) | `"Entity"` | `{"SourceRef": {"Entity": "Sales"}}` |
+| Filter `Where` conditions (filterConfig, bookmark filters) | `"Source"` (alias from `From[]`) | `{"SourceRef": {"Source": "s"}}` |
+| scopeId selectors (formatting objects) | `"Entity"` | `{"SourceRef": {"Entity": "Products"}}` |
+
+In any context where `"Source"` is used, a `"From"` array must declare the alias:
+```json
+"From": [{"Name": "s", "Entity": "Sales", "Type": 0}]
+```
+
+Using `"Entity"` in a filter `Where` condition produces broken filter JSON. See [filter-pane.md](../filter-pane.md) and [visual-json.md](../visual-json.md) for full examples.
+
 ## Common Mistakes
 
 | Error | Cause | Fix |

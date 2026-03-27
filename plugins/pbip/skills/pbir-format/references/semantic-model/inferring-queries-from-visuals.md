@@ -79,12 +79,17 @@ SUMMARIZECOLUMNS(
 |--------|----------------|---------------|
 | card (old card) | - | Values |
 | cardVisual (new card) | - | Data |
-| Line/Column Chart | Category | Y |
-| Bar Chart | Category | Y |
+| lineChart | Category | Y (also Y2 for combo) |
+| barChart / clusteredBarChart | Category | Y |
+| columnChart / clusteredColumnChart | Category | Y |
+| areaChart / stackedAreaChart | Category | Y (also Series) |
+| waterfallChart / ribbonChart / donutChart | Category | Y |
 | Slicer | Values | - |
 | KPI | TrendLine (when bound) | Indicator, Goal |
-| Table | Values (dims) | Values (measures) |
+| tableEx (standard table) | Values (columns = groupings) | Values (measures) |
+| pivotTable (matrix) | Rows, Columns | Values |
 | Scatter | Category | X, Y, Size, Tooltips |
+| multiRowCard | Values (dims) | Values (measures) |
 
 ### 3. Filters → Variables
 
@@ -387,6 +392,43 @@ SUMMARIZECOLUMNS(
 ```
 
 Note: When a chart has grouping columns (like this line chart with `'Date'[Month]`), extension measures are included **without** `IGNORE()`. Use `IGNORE()` only for visuals with **no** grouping columns (cards, KPIs) to prevent a blank row.
+
+### tableEx (Standard Table) — visualType: `tableEx`
+
+Table visuals use a single `Values` role containing a **mix** of columns (become grouping arguments) and measures (become measure aliases). This is unique — all columns and measures are in one role, unlike charts which separate grouping and measures.
+
+**K201 Table example metadata (Values role):**
+```
+- Column: Customers.Key Account Name  → grouping
+- Measure: On-Time Delivery.OTD % (Value)  → measure alias
+```
+
+**Query:**
+```dax
+EVALUATE
+SUMMARIZECOLUMNS(
+    'Customers'[Key Account Name],     -- Column from Values → grouping
+    "OTD____Value_", 'On-Time Delivery'[OTD % (Value)]  -- Measure from Values
+)
+```
+
+All columns in the `Values` role become grouping columns. All measures become measure aliases.
+
+### pivotTable (Matrix) — visualType: `pivotTable`
+
+Matrix visuals have **three** distinct roles — `Rows`, `Columns`, and `Values`. Both `Rows` and `Columns` become grouping arguments; `Values` become measure aliases. Power BI generates a SUMMARIZECOLUMNS query covering the cross-product.
+
+**Example:**
+```dax
+EVALUATE
+SUMMARIZECOLUMNS(
+    'Products'[Category],              -- Rows role
+    'Date'[Year],                      -- Columns role
+    "Revenue", 'Sales'[Revenue]        -- Values role
+)
+```
+
+Note: The matrix's row/column layout is controlled by the visual rendering, not by the DAX query. The query returns a flat table; Power BI pivots it visually.
 
 ## Quick reference
 
