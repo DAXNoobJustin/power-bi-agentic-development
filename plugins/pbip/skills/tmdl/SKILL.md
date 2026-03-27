@@ -567,13 +567,18 @@ ref cultureInfo en-US
 
 ### Indentation Depth Summary
 
+**Rule: a multi-line DAX body is always 2 levels deeper than its enclosing object declaration.**
+
 | Context | Depth | Tabs |
 |---------|-------|------|
 | Top-level declaration (`table`, `relationship`, `expression`) | 0 | 0 |
 | Table properties, column/measure/hierarchy declarations | 1 | 1 |
 | Column/measure properties, hierarchy levels | 2 | 2 |
-| Multi-line DAX expression body | 3 | 3 |
+| DAX body for measure/column declared at depth 1 (inside table) | 3 | 3 |
 | Level properties | 3 | 3 |
+| DAX body for top-level `function` declared at depth 0 | 2 | 2 |
+| `calculationItem` inside `calculationGroup` (depth 1) | 2 | 2 |
+| DAX body for `calculationItem` at depth 2 | 4 | 4 |
 
 ## Additional Resources
 

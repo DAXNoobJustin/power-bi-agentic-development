@@ -172,10 +172,19 @@ To add an image to the wallpaper, you must:
    StaticResources/RegisteredResources/image_name_unique_id.png
    ```
 
-2. **Register the image in `definition/report.json`** (not the bare `report.json` at the report root — that is the PBIR-Legacy file):
+2. **Register the image in `definition/report.json`** (not the bare `report.json` at the report root — that is the PBIR-Legacy file).
+
+   **IMPORTANT:** Add to the existing `RegisteredResources.items` array — do NOT replace the entire `resourcePackages` array, or you will lose the `SharedResources` base theme registration.
+
+   The complete `resourcePackages` should look like this:
    ```json
    {
      "resourcePackages": [
+       {
+         "name": "SharedResources",
+         "type": "SharedResources",
+         "items": [{"name": "CY24SU10", "path": "BaseThemes/CY24SU10.json", "type": "BaseTheme"}]
+       },
        {
          "name": "RegisteredResources",
          "type": "RegisteredResources",

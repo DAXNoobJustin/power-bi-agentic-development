@@ -240,7 +240,7 @@ Brief overview of remaining files in the `.Report/` and `.SemanticModel/` folder
 | `definition/` | PBIR report definition (pages, visuals, bookmarks) | Yes (JSON schema validated) |
 | `report.json` | PBIR-Legacy report definition | No |
 | `mobileState.json` | Mobile layout settings | No |
-| `semanticModelDiagramLayout.json` | Diagram node positions (contains table names) | Limited (table renames only) |
+| `semanticModelDiagramLayout.json` | Diagram node positions (contains table names) — **needs verification**: this filename is not confirmed in Microsoft docs or the K201 example; verify against a live PBI Desktop export | Limited (table renames only) |
 | `CustomVisuals/` | Private custom visual metadata (org/AppSource visuals load automatically) | No |
 | `StaticResources/RegisteredResources/` | Custom themes, images, .pbiviz files | Yes (for already-registered resources) |
 | `diagramLayout.json` (in SM folder) | Semantic model diagram metadata | No |
