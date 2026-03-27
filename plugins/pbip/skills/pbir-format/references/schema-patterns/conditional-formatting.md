@@ -176,14 +176,16 @@ Two forms depending on whether you need fixed or data-relative bounds.
 
 ### Three-Color Gradient (linearGradient3)
 
-Diverging color scheme with midpoint:
+Diverging color scheme with midpoint.
+
+**Data-driven** (scale spans actual data min/max):
 
 ```json
 {
   "FillRule": {
     "linearGradient3": {
       "min": {"color": {"Literal": {"Value": "'minColor'"}}},
-      "mid": {"color": {"Literal": {"Value": "'midColor'"}}},
+      "mid": {"color": {"Literal": {"Value": "'neutral'"}}},
       "max": {"color": {"Literal": {"Value": "'maxColor'"}}},
       "nullColoringStrategy": {
         "strategy": {"Literal": {"Value": "'asZero'"}}
@@ -193,7 +195,37 @@ Diverging color scheme with midpoint:
 }
 ```
 
-**Use case:** Red-yellow-green scale for negative-neutral-positive values.
+**Explicit bounds** (fixed thresholds — e.g., 0 is always the midpoint regardless of data range):
+
+```json
+{
+  "FillRule": {
+    "linearGradient3": {
+      "min": {
+        "color": {"Literal": {"Value": "'minColor'"}},
+        "value": {"Literal": {"Value": "-1D"}}
+      },
+      "mid": {
+        "color": {"Literal": {"Value": "'neutral'"}},
+        "value": {"Literal": {"Value": "0D"}}
+      },
+      "max": {
+        "color": {"Literal": {"Value": "'maxColor'"}},
+        "value": {"Literal": {"Value": "1D"}}
+      },
+      "nullColoringStrategy": {
+        "strategy": {"Literal": {"Value": "'asZero'"}}
+      }
+    }
+  }
+}
+```
+
+**When to use which:**
+- **Data-driven**: Color maps across the observed range; midpoint shifts with data
+- **Explicit bounds**: 0 (or any threshold) is always the midpoint; useful for variance measures where zero means neutral
+
+**Use case:** Red-neutral-green scale for negative-neutral-positive values.
 
 ## Pattern 2: Line Chart Segment Colors
 
