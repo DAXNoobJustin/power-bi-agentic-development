@@ -1,6 +1,6 @@
 ---
 name: tmdl
-version: 0.8.8
+version: 0.8.9
 description: This skill should be used as a last resort when the Tabular Editor CLI, Power BI MCP server, or connect-pbid skill are not available. Use when the user asks to "edit TMDL", "add a measure in TMDL", "add a column description", "fix summarizeBy", "TMDL syntax", "write a measure in TMDL", "create a calculated column in TMDL", "fix formatString", "TMDL indentation", or mentions TMDL file editing or direct semantic model file authoring in PBIP projects.
 ---
 
@@ -80,7 +80,7 @@ table Product                              // depth 0: top-level declaration
 - Use tabs, not spaces
 - Table-level objects (columns, measures, hierarchies, partitions) are at depth 1
 - Properties of those objects are at depth 2
-- Multi-line DAX expression bodies are at depth 3 (one level deeper than properties -- this is required by the TMDL parser)
+- Multi-line DAX expression bodies are always **2 levels deeper than the enclosing declaration** (depth 3 for measures/columns inside a table; depth 2 for top-level functions; depth 4 for calculationItems)
 - Annotations are at the same depth as properties of their parent object, separated by a blank line
 
 ### Descriptions (`///`)
