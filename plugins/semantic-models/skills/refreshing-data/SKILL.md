@@ -1,25 +1,23 @@
 ---
-description: Trigger semantic model refresh via Power BI API
-argument-hint: [workspace/model]
+name: refreshing-data
+version: 0.10.0
+description: This skill should be used when the user asks to "refresh a semantic model", "trigger a dataset refresh", "check refresh status", "monitor refresh history", "schedule a refresh", or mentions refreshing data, refresh failures, or refresh monitoring for Power BI semantic models.
 ---
 
-# Refresh Semantic Model
+# Refreshing Data
 
-Trigger a refresh for the specified semantic model: $ARGUMENTS
+Trigger, monitor, and troubleshoot semantic model refreshes via the Power BI REST API.
 
-## Steps
+## Trigger a Refresh
 
-1. **Extract workspace and model IDs:**
+### 1. Extract IDs
 
 ```bash
-# Get workspace ID
 WS_ID=$(fab get "WorkspaceName.Workspace" -q "id" | tr -d '"')
-
-# Get model ID
 MODEL_ID=$(fab get "WorkspaceName.Workspace/ModelName.SemanticModel" -q "id" | tr -d '"')
 ```
 
-2. **Trigger the refresh:**
+### 2. Trigger
 
 ```bash
 fab api -A powerbi "groups/$WS_ID/datasets/$MODEL_ID/refreshes" -X post -i '{"type":"Full"}'
@@ -27,10 +25,10 @@ fab api -A powerbi "groups/$WS_ID/datasets/$MODEL_ID/refreshes" -X post -i '{"ty
 
 Refresh types:
 
-- `Full` - Full refresh of all tables
-- `Automatic` - Incremental refresh if configured, else full
+- `Full` -- full refresh of all tables
+- `Automatic` -- incremental refresh if configured, otherwise full
 
-3. **Monitor refresh status:**
+### 3. Monitor Status
 
 ```bash
 fab api -A powerbi "groups/$WS_ID/datasets/$MODEL_ID/refreshes?\$top=1"
@@ -47,8 +45,13 @@ MODEL_ID=$(fab get "$WS.Workspace/$MODEL.SemanticModel" -q "id" | tr -d '"') && 
 fab api -A powerbi "groups/$WS_ID/datasets/$MODEL_ID/refreshes" -X post -i '{"type":"Full"}'
 ```
 
+## Check Refresh History
+
+```bash
+fab api -A powerbi "groups/$WS_ID/datasets/$MODEL_ID/refreshes?\$top=5"
+```
+
 ## Notes
 
 - Requires workspace contributor or higher permissions
 - Enhanced refresh (with `commitMode`, `maxParallelism`) requires Premium/Fabric capacity
-- Check refresh history: `fab api -A powerbi "groups/$WS_ID/datasets/$MODEL_ID/refreshes?\$top=5"`
