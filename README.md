@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.9.3-blue" alt="Version">
+  <img src="https://img.shields.io/badge/version-0.10.0-blue" alt="Version">
   <img src="https://img.shields.io/badge/tabular_editor-2%20%7C%203-orange" alt="Tabular Editor">
   <img src="https://img.shields.io/badge/license-GPL--3.0-green" alt="License">
 </p>
@@ -86,6 +86,10 @@ You can also drag any `.md` skill file into Copilot Chat or reference it with `#
 | [`r-visuals`](plugins/reports/skills/r-visuals/) | reports | R script visuals (ggplot2) in Power BI reports |
 | [`python-visuals`](plugins/reports/skills/python-visuals/) | reports | Python script visuals (matplotlib/seaborn) in Power BI reports |
 | [`svg-visuals`](plugins/reports/skills/svg-visuals/) | reports | SVG visuals via DAX measures in Power BI reports |
+| [`standardize-naming-conventions`](plugins/semantic-models/skills/standardize-naming-conventions/) | semantic-models | Audit and standardize naming conventions in semantic models |
+| [`auditing-semantic-models`](plugins/semantic-models/skills/auditing-semantic-models/) | semantic-models | Audit semantic models for quality, memory, design, and best practices |
+| [`refreshing-data`](plugins/semantic-models/skills/refreshing-data/) | semantic-models | Trigger, monitor, and troubleshoot semantic model refreshes |
+| [`fabric-cli`](plugins/fabric-cli/skills/fabric-cli/) | fabric-cli | Fabric CLI (fab) for managing workspaces, items, jobs, and APIs |
 
 ### Commands
 
@@ -94,7 +98,8 @@ You can also drag any `.md` skill file into Copilot Chat or reference it with `#
 | Command | Plugin | Description |
 |---------|--------|-------------|
 | [`/suggest-rule`](plugins/tabular-editor/commands/suggest-rule.md) | tabular-editor | Generate BPA rules from descriptions |
-| [`/standardize-naming-conventions`](plugins/semantic-models/skills/standardize-naming-conventions/) | semantic-models | Audit and standardize naming conventions in semantic models |
+| [`/audit-context`](plugins/fabric-cli/commands/audit-context.md) | fabric-cli | Review project context files (CLAUDE.md, agents.md, memory files) |
+| [`/migrating-fabric-trial-capacities`](plugins/fabric-cli/commands/migrating-fabric-trial-capacities.md) | fabric-cli | Migrate workspaces from trial to production capacity |
 
 ### Agents
 
@@ -105,6 +110,7 @@ You can also drag any `.md` skill file into Copilot Chat or reference it with `#
 | [`bpa-expression-helper`](plugins/tabular-editor/agents/bpa-expression-helper.md) | tabular-editor | Debug and improve BPA rule expressions |
 | [`pbip-validator`](plugins/pbip/agents/pbip-validator.md) | pbip | Validate PBIP project structure, TMDL syntax, and PBIR schemas |
 | [`query-listener`](plugins/pbi-desktop/agents/query-listener.md) | pbi-desktop | Listen to query traces from Power BI Desktop visuals in real time |
+| [`semantic-model-auditor`](plugins/semantic-models/agents/semantic-model-auditor.md) | semantic-models | Audit semantic models for quality, memory, DAX, and design issues |
 | [`deneb-reviewer`](plugins/reports/agents/deneb-reviewer.md) | reports | Review Deneb visual specs for Vega/Vega-Lite syntax and conventions |
 | [`svg-reviewer`](plugins/reports/agents/svg-reviewer.md) | reports | Review SVG DAX measures for syntax and design quality |
 | [`r-reviewer`](plugins/reports/agents/r-reviewer.md) | reports | Review R visual scripts (ggplot2) for Power BI conventions |
