@@ -64,5 +64,5 @@ The script only discovers Power BI reports. For full dependency mapping includin
 ## Related Skills
 
 - **`auditing-semantic-models`** -- Audit model quality, memory, DAX, design
-- **`refreshing-data`** -- Trigger and monitor model refreshes
+- **`refreshing-semantic-model`** -- Trigger and monitor model refreshes
 - **`fabric-cli`** (fabric-cli plugin) -- Workspace and item management via `fab` CLI
