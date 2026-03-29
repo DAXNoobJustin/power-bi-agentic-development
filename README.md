@@ -15,7 +15,7 @@
 ---
 
 <p align="center">
-  <img src="public/bg22-06-2.png" alt="" width="800">
+  <img src="media/bg22-06-2.png" alt="" width="800">
 </p>
 
 ## Installation
