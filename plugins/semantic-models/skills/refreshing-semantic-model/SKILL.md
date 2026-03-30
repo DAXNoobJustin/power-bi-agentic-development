@@ -1,6 +1,6 @@
 ---
 name: refreshing-semantic-model
-version: 0.10.1
+version: 0.11.1
 description: This skill should be used when the user asks to "refresh a semantic model", "trigger a dataset refresh", "refresh specific tables", "refresh partitions", "check refresh status", "monitor refresh history", "do a data-only refresh", "recalculate measures", "clear model data", "cancel a refresh", "validate refresh results", or mentions refresh types, refresh failures, incremental refresh, or enhanced refresh for Power BI semantic models.
 ---
 
@@ -267,7 +267,7 @@ Pro capacity supports only full-model standard refreshes. Enhanced refresh featu
 
 ## Related Skills
 
-- **`reviewing-semantic-models`** -- Structured model quality and performance review
+- **`review-semantic-model`** -- Structured model quality and performance review
 - **`lineage-analysis`** -- Downstream report discovery and impact analysis
 - **`standardize-naming-conventions`** -- Naming audit and remediation
 - **`fabric-cli`** (fabric-cli plugin) -- Workspace and item management via `fab` CLI
