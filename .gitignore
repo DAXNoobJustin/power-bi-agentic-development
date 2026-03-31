@@ -7,6 +7,5 @@ __pycache__/
 .claude/
 CLAUDE.md
 *.tmuo
-tools/*/target/
-tools/*/.cargo/
+tools/
 tmp/
