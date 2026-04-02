@@ -109,6 +109,8 @@ SELECT * FROM read_csv('abfss://${WS_ID}@onelake.dfs.fabric.microsoft.com/${LH_I
 
 Use this approach whenever investigating data issues (freshness, quality, missing records), exploring source data before building a semantic model, or validating lakehouse contents after ETL runs. The same path format works for warehouses.
 
+**Do not assume anything about the data.** Before writing a final query, spot-check first: sample rows to understand units and granularity, check for fan-outs/duplicates, verify row counts match the expected grain, and use `AskUserQuestion` to clarify ambiguities with the user.
+
 For full examples and common patterns, see **`references/querying-data.md`**.
 
 ## Command Reference
