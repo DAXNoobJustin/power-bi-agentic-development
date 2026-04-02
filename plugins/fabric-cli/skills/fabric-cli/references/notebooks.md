@@ -190,22 +190,31 @@ This is the native Spark Delta writer; no extra imports needed.
 
 ### Writing to Warehouses from Notebooks
 
-Warehouses do not accept direct Delta writes to their OneLake path. Use the `synapsesql` connector (TDS + COPY INTO). Requires Runtime 1.3+ and the Fabric Spark import:
+Two approaches; the direct OneLake path is more reliable from `fab job run`:
+
+**Approach 1: Direct OneLake Delta write (recommended)**
+
+Write directly to the warehouse's OneLake path. No extra connector needed:
+
+```python
+# Get workspace and warehouse IDs from fab beforehand
+wh_path = "abfss://<ws-id>@onelake.dfs.fabric.microsoft.com/<wh-id>/Tables/dbo/table_name"
+df.write.format("delta").mode("overwrite").option("overwriteSchema", "true").save(wh_path)
+```
+
+**Approach 2: synapsesql connector (Microsoft docs pattern)**
+
+Uses the Spark-to-Warehouse TDS connector. Requires Runtime 1.3+ and the Fabric Spark import:
 
 ```python
 import com.microsoft.spark.fabric
 from com.microsoft.spark.fabric.Constants import Constants
 
-# Write to warehouse
 df.write.synapsesql("WarehouseName.dbo.table_name", mode="overwrite")
-
-# Read from warehouse
 df = spark.read.synapsesql("WarehouseName.dbo.table_name")
 ```
 
 **Known issue**: `synapsesql` failures via `fab job run` show "failed without detail error" with no stack trace. Open the notebook in Fabric portal (`fab open`) to see the actual Spark exception. Common causes: runtime version, warehouse not in same workspace, or connector not finding the endpoint.
-
-For T-SQL approaches (SSMS, Fabric portal editor), see [warehouses.md](./warehouses.md).
 
 ### Create and Configure Query Notebook
 

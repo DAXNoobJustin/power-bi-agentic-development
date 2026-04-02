@@ -53,9 +53,26 @@ For full DuckDB patterns, see [querying-data.md](./querying-data.md).
 
 Warehouses do not support `fab cp` to Files or `fab table load`. Data must be loaded via T-SQL (SSMS, notebooks) or pipelines.
 
-### Via Notebook: synapsesql Connector
+### Via Notebook: Direct OneLake Write (Recommended for Agents)
 
-The `synapsesql` connector is the only supported Spark write path for warehouses. Requires Runtime 1.3+ and the Fabric Spark import. Direct Delta writes to the warehouse's OneLake path are rejected.
+Write directly to the warehouse's OneLake Delta path from a Spark notebook. No extra connector needed:
+
+```python
+# Write to warehouse via OneLake path (most reliable from fab job run)
+wh_path = "abfss://<ws-id>@onelake.dfs.fabric.microsoft.com/<wh-id>/Tables/dbo/table_name"
+df.write.format("delta").mode("overwrite").option("overwriteSchema", "true").save(wh_path)
+```
+
+Get the IDs beforehand with `fab get`:
+
+```bash
+WS_ID=$(fab get "ws.Workspace" -q "id" | tr -d '"')
+WH_ID=$(fab get "ws.Workspace/MyWarehouse.Warehouse" -q "id" | tr -d '"')
+```
+
+### Via Notebook: synapsesql Connector (Alternative)
+
+The `synapsesql` connector uses TDS + COPY INTO. Requires Runtime 1.3+ and can be unreliable from `fab job run` (opaque "failed without detail error"):
 
 ```python
 import com.microsoft.spark.fabric
@@ -63,8 +80,6 @@ from com.microsoft.spark.fabric.Constants import Constants
 
 df.write.synapsesql("WarehouseName.dbo.table_name", mode="overwrite")
 ```
-
-**Known issue**: `fab job run` failures with `synapsesql` show "failed without detail error". Open the notebook in Fabric portal (`fab open`) to see the actual Spark exception. Common causes: runtime version, permissions, warehouse not in same workspace as the notebook's lakehouse.
 
 See [notebooks.md](./notebooks.md) for creating and running notebooks via `fab`.
 

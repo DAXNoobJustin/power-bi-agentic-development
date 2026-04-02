@@ -58,14 +58,14 @@ SQL databases support full T-SQL DDL/DML. Data can be loaded via:
 
 ### Via Notebook
 
-SQL databases use the Spark SQL connector (separate from `synapsesql`). See [Spark connector for SQL databases](https://learn.microsoft.com/fabric/data-engineering/spark-sql-connector):
-
 ```python
-# Write to SQL database via Spark SQL connector
-df.write.format("com.microsoft.spark.sqldb").mode("overwrite").save("SQLDatabaseName.dbo.table_name")
-```
+# Direct OneLake write (most reliable from fab job run)
+db_path = "abfss://<ws-id>@onelake.dfs.fabric.microsoft.com/<db-id>/Tables/dbo/table_name"
+df.write.format("delta").mode("overwrite").option("overwriteSchema", "true").save(db_path)
 
-Direct Delta writes to the SQL database OneLake path are not supported; data is auto-mirrored from the SQL engine to OneLake, not the other way around.
+# Or via synapsesql connector (requires Runtime 1.3+, com.microsoft.spark.fabric import)
+df.write.synapsesql("SQLDatabaseName.dbo.table_name", mode="overwrite")
+```
 
 ### Via T-SQL (Fabric Portal or SSMS)
 
