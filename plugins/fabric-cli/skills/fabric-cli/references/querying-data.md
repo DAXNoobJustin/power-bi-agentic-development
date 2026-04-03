@@ -180,13 +180,13 @@ The `nb` CLI (`cargo install nb-fabric`) wraps the full session lifecycle: creat
 nb exec code "MyWorkspace/MyLH.Lakehouse" "print('hello')"
 
 # PySpark (includes Spark context for SQL and DataFrames)
-nb exec code "MyWorkspace/MyLH.Lakehouse" --pyspark "spark.sql('SHOW TABLES').show()"
+nb exec code "MyWorkspace/MyLH.Lakehouse" "spark.sql('SHOW TABLES').show()"
 
 # Pipe code via stdin
-echo "spark.sql('SELECT COUNT(*) FROM gold.orders').show()" | nb exec code "WS/LH.Lakehouse" --pyspark --code -
+echo "spark.sql('SELECT COUNT(*) FROM gold.orders').show()" | nb exec code "WS/LH.Lakehouse" -
 
 # Multi-line code
-nb exec code "MyWorkspace/MyLH.Lakehouse" --pyspark --code "
+nb exec code "MyWorkspace/MyLH.Lakehouse" "
 df = spark.sql('SELECT category, COUNT(*) as n FROM products GROUP BY category ORDER BY n DESC')
 df.show()
 df.write.mode('overwrite').saveAsTable('product_summary')
@@ -330,7 +330,7 @@ finally:
 | Scenario | Use |
 |----------|-----|
 | Quick read-only exploration | DuckDB (fastest; no Spark overhead) |
-| Write data back to lakehouse | `nb exec code --pyspark` or notebook |
+| Write data back to lakehouse | `nb exec code` or notebook |
 | Ephemeral transform; no persistent artifact | `nb exec code` |
 | Complex multi-cell workflow with debugging | Notebook (`nb exec` or portal) |
 | Scheduled ETL | Notebook via `fab job run` |

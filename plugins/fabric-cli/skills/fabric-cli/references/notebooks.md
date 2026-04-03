@@ -11,13 +11,13 @@ The key differentiator: `fab job run` executes a notebook as a batch job but nev
 ```bash
 # Run code directly against a lakehouse (no notebook needed)
 nb exec code "My Workspace/MainLH.Lakehouse" "print('hello')"
-nb exec code "My Workspace/MainLH.Lakehouse" --pyspark "spark.sql('SHOW TABLES').show()"
+nb exec code "My Workspace/MainLH.Lakehouse" "spark.sql('SHOW TABLES').show()"
 
 # Execute a specific notebook cell by index
 nb exec cell "My Workspace/Analytics" 0 --lakehouse MainLH
 
 # Pipe code via stdin (for agents)
-echo "spark.sql('SELECT count(*) FROM gold.orders').show()" | nb exec code "WS/LH.Lakehouse" --pyspark -
+echo "spark.sql('SELECT count(*) FROM gold.orders').show()" | nb exec code "WS/LH.Lakehouse" -
 ```
 
 ### `nb` Command Reference
@@ -40,8 +40,6 @@ nb cell edit <ws/name> <index> --code "..."   Replace cell source
 nb cell rm <ws/name> <index>                  Remove a cell
 
 nb exec code <ws/lakehouse> <code>            Run code against a lakehouse (no notebook)
-  --pyspark                                     Use PySpark runtime (includes Spark context)
-  --python                                      Use Python runtime (default)
 nb exec cell <ws/notebook> <index>            Execute a notebook cell interactively
   --lakehouse <name>                            Lakehouse (auto-detected from notebook)
 
@@ -75,19 +73,17 @@ Sessions are always cleaned up, even on Ctrl+C (signal handler). Exit code is no
 
 #### Python vs PySpark in Livy sessions
 
-The `--pyspark` and `--python` flags control the Livy session `kind` parameter, but **in practice both modes provide a full `spark` (SparkSession) variable** on Fabric. This is because Fabric's Livy API always runs against Spark compute attached to a lakehouse -- there is no lightweight "pure Python" runtime via Livy.
+Fabric's Livy API always runs against Spark compute attached to a lakehouse. There is no lightweight "pure Python" runtime via the Livy API. A full `spark` (SparkSession) variable is always available, giving you `spark.sql()`, DataFrames, and full lakehouse read/write.
 
-The Python vs PySpark distinction is only meaningful in **Fabric Notebooks** (the UI experience):
+The Python vs PySpark distinction is only meaningful in **Fabric Notebooks** (the UI experience), not in `nb exec code`:
 
-| Aspect | Python Notebook | PySpark Notebook |
-|--------|----------------|------------------|
+| Aspect | Python Notebook (UI) | PySpark Notebook (UI) |
+|--------|---------------------|----------------------|
 | Compute | 2-core lightweight container | Spark cluster |
 | Startup | Seconds | Seconds (starter pool) to minutes |
 | Cost | Min 2 vCores | Min 4 vCores |
 | Delta Lake | Partial (via delta-rs) | Fully native |
 | Distributed compute | No | Yes |
-
-For `nb exec code`, both `--python` (default) and `--pyspark` give you `spark.sql()`, DataFrames, and full lakehouse read/write. The default `--python` is fine for most use cases.
 
 ### Install
 
