@@ -67,11 +67,27 @@ nb delete <ws/name> --force                   Delete notebook
 
 `nb exec` creates an interactive session, submits code, and returns output:
 
-1. **`exec code`**: Resolves workspace and lakehouse directly; uses `--pyspark` or `--python` flag for runtime
+1. **`exec code`**: Resolves workspace and lakehouse directly; code is a positional arg
 2. **`exec cell`**: Resolves workspace, notebook, and lakehouse; auto-detects kernel from notebook metadata
 3. Both: create a session, wait for idle, submit code, poll for result, print output, clean up session
 
-Sessions are always cleaned up, even on errors. Exit code is non-zero when code fails. Structured metadata (session ID, runtime, duration, status) is printed to stderr.
+Sessions are always cleaned up, even on Ctrl+C (signal handler). Exit code is non-zero when code fails. Structured metadata (session ID, runtime, duration, status) is printed to stderr.
+
+#### Python vs PySpark in Livy sessions
+
+The `--pyspark` and `--python` flags control the Livy session `kind` parameter, but **in practice both modes provide a full `spark` (SparkSession) variable** on Fabric. This is because Fabric's Livy API always runs against Spark compute attached to a lakehouse -- there is no lightweight "pure Python" runtime via Livy.
+
+The Python vs PySpark distinction is only meaningful in **Fabric Notebooks** (the UI experience):
+
+| Aspect | Python Notebook | PySpark Notebook |
+|--------|----------------|------------------|
+| Compute | 2-core lightweight container | Spark cluster |
+| Startup | Seconds | Seconds (starter pool) to minutes |
+| Cost | Min 2 vCores | Min 4 vCores |
+| Delta Lake | Partial (via delta-rs) | Fully native |
+| Distributed compute | No | Yes |
+
+For `nb exec code`, both `--python` (default) and `--pyspark` give you `spark.sql()`, DataFrames, and full lakehouse read/write. The default `--python` is fine for most use cases.
 
 ### Install
 
@@ -103,24 +119,24 @@ nb auth status
 
 ### Notebook-less Execution
 
-`nb exec code` runs arbitrary PySpark/Python on Fabric Spark compute without creating a notebook. The session is created, used, and cleaned up automatically.
+`nb exec code` runs Python on Fabric Spark compute without creating a notebook. The session is created, used, and cleaned up automatically. The `spark` variable (SparkSession) is always available for querying lakehouse tables.
 
 ```bash
 # Simple Python
 nb exec code "MyWorkspace/MyLH.Lakehouse" "print('hello')"
 
-# PySpark with Spark SQL
-nb exec code "MyWorkspace/MyLH.Lakehouse" --pyspark "spark.sql('SELECT count(*) FROM gold.orders').show()"
+# Query lakehouse tables via Spark SQL
+nb exec code "MyWorkspace/MyLH.Lakehouse" "spark.sql('SELECT count(*) FROM gold.orders').show()"
 
 # Multi-line ETL
-nb exec code "MyWorkspace/MyLH.Lakehouse" --pyspark "
+nb exec code "MyWorkspace/MyLH.Lakehouse" "
 df = spark.sql('SELECT category, COUNT(*) as n FROM products GROUP BY category')
 df.write.mode('overwrite').saveAsTable('product_summary')
 print('Done')
 "
 
 # Pipe from file or script
-cat transform.py | nb exec code "MyWorkspace/MyLH.Lakehouse" --pyspark -
+cat transform.py | nb exec code "MyWorkspace/MyLH.Lakehouse" -
 ```
 
 Use this when: agent-driven ephemeral ETL, one-off transforms, data validation, or any scenario where a persistent notebook artifact adds unnecessary overhead.
