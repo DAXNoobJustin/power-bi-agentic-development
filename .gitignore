@@ -9,3 +9,8 @@ CLAUDE.md
 *.tmuo
 tools/
 tmp/
+.worktrees/
+node_modules/
+package-lock.json
+package.json
+plugins/etl/

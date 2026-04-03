@@ -1,6 +1,6 @@
 ---
 name: fabric-cli
-version: 0.11.4
+version: 0.17.0
 description: This skill should be used when the user asks to "use the Fabric CLI", "run fab commands", "deploy Fabric items", "manage Fabric workspaces", "query a lakehouse", "query lakehouse data", "query OneLake", "check data freshness", "validate data quality", "explore lakehouse schema", "use DuckDB with Fabric", "refresh a semantic model via CLI", "run a Fabric notebook", "execute notebook code", "get notebook output", "manage notebook cells", "schedule a notebook", "manage OneLake files", "automate Fabric operations", or mentions fab, nb, nb-fabric, Fabric CLI, DuckDB, OneLake, Livy, or Fabric item management. Provides expert guidance for the fab CLI, nb CLI, and DuckDB covering navigation, notebook management, data querying, deployment, jobs, APIs, and automation.
 ---
 
@@ -389,6 +389,7 @@ fab <command> --help
 - [fab vs az CLI](./references/fab-vs-az-cli.md) - When to use which; capacity, networking, Key Vault, monitoring, CMK, CI/CD
 - [Admin APIs](./references/admin.md) - Cross-workspace search, tenant operations, governance
 - [API Reference](./references/fab-api.md) - Capacities, domains, misc API patterns
+- [Connections](./references/connections.md) - Create, update, list connections programmatically; credential types (WorkspaceIdentity, SPN, Basic); OAuth2 limitations
 - [Full Command Reference](./references/reference.md) - All commands detailed
 
 **External references** (request markdown when possible):
