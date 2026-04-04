@@ -21,7 +21,7 @@
 ---
 
 <p align="center">
-  <img src="media/bg22-06-2.png" alt="" width="800">
+  <img src="media/bg42-11-3.png" alt="" width="800">
 </p>
 
 ## Installation
@@ -71,7 +71,14 @@ copilot plugin install data-goblin/power-bi-agentic-development
 
 ## Overview
 
-### Skills
+The repo contains skills, agents, and hooks.
+
+- **Skills** teach agents domain knowledge and workflows. They activate automatically based on task context, or can be invoked manually with `/skill-name`.
+- **Agents** are autonomous subprocesses that handle complex, multi-step tasks independently; typically used for review and validation.
+- **Hooks** run automatically after tool use to validate files and catch errors early.
+
+<details>
+<summary><strong>Skills</strong> (23)</summary>
 
 | Skill | Plugin | Description |
 |-------|--------|-------------|
@@ -96,21 +103,14 @@ copilot plugin install data-goblin/power-bi-agentic-development
 | [`refreshing-semantic-model`](plugins/semantic-models/skills/refreshing-semantic-model/) | semantic-models | Trigger or troubleshoot refreshes |
 | [`lineage-analysis`](plugins/semantic-models/skills/lineage-analysis/) | semantic-models | Trace downstream reports from a semantic model across workspaces |
 | [`fabric-cli`](plugins/fabric-cli/skills/fabric-cli/) | fabric-cli | Fabric CLI (fab) for any remote operation in Power BI or Fabric (Fabric not required; works fully on Pro, PPU) |
+| [`/suggest-rule`](plugins/tabular-editor/commands/suggest-rule.md) | tabular-editor | Generate BPA rules from descriptions (command; treated as a skill in Claude Code) |
+| [`/audit-context`](plugins/fabric-cli/commands/audit-context.md) | fabric-cli | Review project context files (command; treated as a skill in Claude Code) |
+| [`/migrating-fabric-trial-capacities`](plugins/fabric-cli/commands/migrating-fabric-trial-capacities.md) | fabric-cli | Migrate workspaces from trial to production capacity (command; treated as a skill in Claude Code) |
 
-### Commands
+</details>
 
-> In Claude Code, slash commands and skills have coalesced. Commands are simply more prescriptive workflows, but they take the same structure as a skill.
-> Skills are not workflows nor should they be prescriptive.
-
-| Command | Plugin | Description |
-|---------|--------|-------------|
-| [`/suggest-rule`](plugins/tabular-editor/commands/suggest-rule.md) | tabular-editor | Generate BPA rules from descriptions |
-| [`/audit-context`](plugins/fabric-cli/commands/audit-context.md) | fabric-cli | Review project context files (CLAUDE.md, agents.md, memory files) |
-| [`/migrating-fabric-trial-capacities`](plugins/fabric-cli/commands/migrating-fabric-trial-capacities.md) | fabric-cli | Migrate workspaces from trial to production capacity |
-
-### Hooks
-
-> Hooks run automatically to validate files after edits.
+<details>
+<summary><strong>Hooks</strong> (3)</summary>
 
 | Hook | Plugin | Trigger | Description |
 |------|--------|---------|-------------|
@@ -121,9 +121,10 @@ copilot plugin install data-goblin/power-bi-agentic-development
 > [!NOTE]
 > Hook checks can be individually toggled via `plugins/pbip/hooks/config.yaml`. All checks are enabled by default. Set any check to `false` to disable it; for example, set `fab_exists: false` if you don't have the Fabric CLI installed.
 
-### Agents
+</details>
 
-> Subagents for reviewing or providing feedback on agent (or less frequently human) work
+<details>
+<summary><strong>Agents</strong> (8)</summary>
 
 | Agent | Plugin | Description |
 |-------|--------|-------------|
@@ -135,6 +136,8 @@ copilot plugin install data-goblin/power-bi-agentic-development
 | [`svg-reviewer`](plugins/reports/agents/svg-reviewer.md) | reports | Review SVG DAX measures for syntax and design quality |
 | [`r-reviewer`](plugins/reports/agents/r-reviewer.md) | reports | Review R visual scripts (ggplot2) for Power BI conventions |
 | [`python-reviewer`](plugins/reports/agents/python-reviewer.md) | reports | Review Python visual scripts (matplotlib/seaborn) for Power BI conventions |
+
+</details>
 
 
 ## Useful stuff
@@ -149,6 +152,10 @@ You do not have the license to copy and incorporate them into your own products,
 
 
 <br>
+
+<p align="center">
+  <img src="media/bg22-06-2.png" alt="" width="800">
+</p>
 
 ---
 
