@@ -6,7 +6,7 @@ Tier 3 model patterns (MDL001-MDL010) and Tier 4 Direct Lake patterns (DL001-DL0
 
 ---
 
-## Section 5: Tier 3 — Model Optimization Patterns
+## Section 5: Tier 3 Model Optimization Patterns
 
 > **STOP — Requires user approval before applying any change. Warn that model changes can break downstream reports. Suggest working on a model copy. Implement via `powerbi-semantic-model` skill; upstream source changes (Lakehouse, Warehouse, Power Query) require `fabric-cli` or pipeline coordination.**
 
@@ -139,7 +139,7 @@ Disconnected slicer tables (e.g., a `'Reporting Scenario'[Scenario]` parameter t
 
 ---
 
-## Section 6: Tier 4 — Direct Lake Optimization Patterns
+## Section 6: Tier 4 Direct Lake Optimization Patterns
 
 > **STOP — Requires user approval before applying any change. Changes here require Spark/ETL jobs or Fabric resource profile configuration outside the semantic model. Coordinate with the user's data engineering workflow.**
 

@@ -6,7 +6,7 @@ Tier 1 DAX patterns (DAX001-DAX021) and Tier 2 query structure patterns (QRY001-
 
 ---
 
-## Section 3: Tier 1 — DAX Optimization Patterns
+## Section 3: Tier 1 DAX Optimization Patterns
 
 > **Autonomy: Auto-apply freely. Modify only measure/UDF definitions in the DEFINE block. Keep EVALUATE and SUMMARIZECOLUMNS grouping identical.**
 
@@ -514,7 +514,7 @@ VAR _Result = SUMX ( _Joined, [@Agg2] )
 
 ---
 
-## Section 4: Tier 2 — Query Structure Patterns
+## Section 4: Tier 2 Query Structure Patterns
 
 > **STOP — Requires user approval before applying any change. Explain the impact on query output and wait for explicit confirmation.**
 
